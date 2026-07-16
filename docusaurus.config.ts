@@ -1,0 +1,161 @@
+import type {Config} from '@docusaurus/types';
+import type * as Preset from '@docusaurus/preset-classic';
+import {themes as prismThemes} from 'prism-react-renderer';
+
+const siteUrl = new URL(
+  process.env.CI_PAGES_URL ??
+    process.env.SITE_URL ??
+    'https://developers.m-finance.com',
+);
+const inferredBaseUrl = `${siteUrl.pathname.replace(/\/$/, '')}/`;
+
+const config: Config = {
+  title: 'Trader Developer Platform',
+  tagline: 'Build reliable trading experiences on Trader OpenAPI',
+  favicon: 'img/platform-mark.svg',
+
+  future: {
+    v4: true,
+  },
+
+  url: siteUrl.origin,
+  baseUrl: process.env.BASE_URL ?? inferredBaseUrl,
+  organizationName: 'm-finance',
+  projectName: 'developers-platform',
+  onBrokenLinks: 'throw',
+
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en'],
+  },
+
+  presets: [
+    [
+      'classic',
+      {
+        docs: {
+          sidebarPath: './sidebars.ts',
+        },
+        blog: false,
+        theme: {
+          customCss: './src/css/custom.css',
+        },
+      } satisfies Preset.Options,
+    ],
+    [
+      'redocusaurus',
+      {
+        specs: [
+          {
+            id: 'fxserver-trader-openapi',
+            spec: 'openapi/fxserver-trader.yaml',
+            route: '/reference/fxserver-trader',
+          },
+          {
+            id: 'webproxy-openapi',
+            spec: 'openapi/webproxy.yml',
+            route: '/reference/webproxy',
+          },
+        ],
+        theme: {
+          primaryColor: '#087f5b',
+        },
+      },
+    ],
+  ],
+
+  themes: ['@docusaurus/theme-mermaid'],
+
+  markdown: {
+    mermaid: true,
+  },
+
+  themeConfig: {
+    colorMode: {
+      defaultMode: 'light',
+      respectPrefersColorScheme: true,
+    },
+    metadata: [
+      {
+        name: 'keywords',
+        content: 'Trader OpenAPI, FxServer, WebProxy, trading API, developer platform',
+      },
+    ],
+    navbar: {
+      title: 'TRADER / DEVELOPERS',
+      logo: {
+        alt: 'Trader Developer Platform',
+        src: 'img/platform-mark.svg',
+      },
+      items: [
+        {
+          type: 'docSidebar',
+          sidebarId: 'mainSidebar',
+          position: 'left',
+          label: 'Guides',
+        },
+        {
+          to: '/docs/fx-server/openapi-trader',
+          label: 'Trader API',
+          position: 'left',
+        },
+        {
+          to: '/docs/web-proxy/openapi',
+          label: 'WebProxy API',
+          position: 'left',
+        },
+        {
+          to: '/docs/getting-started/first-trade',
+          label: 'Start building',
+          position: 'right',
+          className: 'navbar__start-link',
+        },
+      ],
+    },
+    footer: {
+      style: 'dark',
+      links: [
+        {
+          title: 'Onboarding',
+          items: [
+            {label: 'Platform overview', to: '/docs/intro'},
+            {label: 'Make your first trade', to: '/docs/getting-started/first-trade'},
+            {label: 'REST essentials', to: '/docs/fx-server/general-rest-api-information'},
+          ],
+        },
+        {
+          title: 'API reference',
+          items: [
+            {label: 'FxServer Trader', to: '/docs/fx-server/openapi-trader'},
+            {label: 'WebProxy', to: '/docs/web-proxy/openapi'},
+          ],
+        },
+        {
+          title: 'Core concepts',
+          items: [
+            {label: 'Contracts', to: '/docs/business-logic/contract-overview'},
+            {label: 'Currencies', to: '/docs/business-logic/currency-overview'},
+            {label: 'Price concepts', to: '/docs/business-logic/price-concept'},
+          ],
+        },
+      ],
+      copyright: `Copyright © ${new Date().getFullYear()} m-FINANCE. Trader Developer Platform.`,
+    },
+    docs: {
+      sidebar: {
+        hideable: true,
+      },
+    },
+    prism: {
+      theme: prismThemes.github,
+      darkTheme: prismThemes.oneDark,
+      additionalLanguages: ['bash'],
+    },
+    tableOfContents: {
+      minHeadingLevel: 2,
+      maxHeadingLevel: 4,
+    },
+  } satisfies Preset.ThemeConfig,
+};
+
+export default config;

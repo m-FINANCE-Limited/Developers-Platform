@@ -1,0 +1,1806 @@
+openapi: 3.1.0
+info:
+  title: FxServer Trader API
+  version: '1.0'
+
+servers:
+  - url: https://localhost:18000
+    description: Local Dev
+  - url: https://fxapitestv22.mfcloud.net:21424
+    description: V22QA
+
+externalDocs:
+  description: FAQ docs
+  url: /docs/fx-server/general-rest-api-information
+
+paths:
+  /addOrder:
+    post:
+      summary: Add a new order
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddOrderRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddOrderResponse'
+        '202':
+          description: Request accepted for processing
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/DelayProcess'
+                  - $ref: '#/components/schemas/ManualProcess'
+        '400':
+          description: Error response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidPayloadError'
+                  - $ref: '#/components/schemas/GenericError'
+                  - $ref: '#/components/schemas/ShortMarginError'
+                  - $ref: '#/components/schemas/LiquidationExistError'
+                  - $ref: '#/components/schemas/UnableToEditAlertedOrderError'
+                  - $ref: '#/components/schemas/ExceedAutoDealLimitError'
+                  - $ref: '#/components/schemas/InvalidMinimumTradeLotError'
+                  - $ref: '#/components/schemas/InvalidIncrementTradeLotError'
+                  - $ref: '#/components/schemas/InvalidAmountError'
+                  - $ref: '#/components/schemas/LimitOrOpLotError'
+                  - $ref: '#/components/schemas/CannotGetDealTokenError'
+                  - $ref: '#/components/schemas/CutLossProcessingError'
+                  - $ref: '#/components/schemas/AmountLessThanMinimumOrderSizeError'
+                  - $ref: '#/components/schemas/ClientLockedTradeError'
+                  - $ref: '#/components/schemas/NotAvailableToAddOrModifyOrderError'
+                  - $ref: '#/components/schemas/NotAvailableToTradeThisContractError'
+                  - $ref: '#/components/schemas/InvalidAccountError'
+                  - $ref: '#/components/schemas/InvalidStopOrderError'
+                  - $ref: '#/components/schemas/NoOpenPositionForLiquidationError'
+                  - $ref: '#/components/schemas/ExceedMaxOrderLotError'
+                  - $ref: '#/components/schemas/OverrideFailError'
+                  - $ref: '#/components/schemas/NoPrivilegeToOverrideError'
+                  - $ref: '#/components/schemas/FreeMarginDeficitExceedOverrideAmountError'
+                  - $ref: '#/components/schemas/ForbiddenToDoSelfOverridingError'
+                  - $ref: '#/components/schemas/NotAllowToDoTradesError'
+                  - $ref: '#/components/schemas/LiquidationOnlyError'
+                  - $ref: '#/components/schemas/PriceCheckFailedError'
+                  - $ref: '#/components/schemas/PartialLiquidationIsNotAllowedError'
+        '401':
+          description: Unauthorized
+        '409':
+          $ref: '#/components/responses/DuplicateClientOrderIdError'
+        '429':
+          $ref: '#/components/responses/RateLimitedResponse'
+        '503':
+          description: Service Unavailable / Dealer not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /editOrder:
+    post:
+      summary: Edit an existing order
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditOrderRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditOrderResponse'
+        '202':
+          description: Request accepted for processing
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/DelayProcess'
+                  - $ref: '#/components/schemas/ManualProcess'
+        '400':
+          description: Error response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidPayloadError'
+                  - $ref: '#/components/schemas/GenericError'
+                  - $ref: '#/components/schemas/ShortMarginError'
+                  - $ref: '#/components/schemas/InvalidRequestBodyError'
+                  - $ref: '#/components/schemas/LiquidationExistError'
+                  - $ref: '#/components/schemas/UnableToEditAlertedOrderError'
+                  - $ref: '#/components/schemas/ExceedAutoDealLimitError'
+                  - $ref: '#/components/schemas/InvalidMinimumTradeLotError'
+                  - $ref: '#/components/schemas/InvalidIncrementTradeLotError'
+                  - $ref: '#/components/schemas/InvalidAmountError'
+                  - $ref: '#/components/schemas/LimitOrOpLotError'
+                  - $ref: '#/components/schemas/CannotGetDealTokenError'
+                  - $ref: '#/components/schemas/CutLossProcessingError'
+                  - $ref: '#/components/schemas/AmountLessThanMinimumOrderSizeError'
+                  - $ref: '#/components/schemas/ClientLockedTradeError' #done
+                  - $ref: '#/components/schemas/NotAvailableToAddOrModifyOrderError'
+                  - $ref: '#/components/schemas/NotAvailableToTradeThisContractError'
+                  - $ref: '#/components/schemas/InvalidAccountError'
+                  - $ref: '#/components/schemas/InvalidStopOrderError'
+                  - $ref: '#/components/schemas/NoOpenPositionForLiquidationError'
+                  - $ref: '#/components/schemas/ExceedMaxOrderLotError'
+                  - $ref: '#/components/schemas/OverrideFailError'
+                  - $ref: '#/components/schemas/NoPrivilegeToOverrideError'
+                  - $ref: '#/components/schemas/FreeMarginDeficitExceedOverrideAmountError'
+                  - $ref: '#/components/schemas/ForbiddenToDoSelfOverridingError'
+                  - $ref: '#/components/schemas/NotAllowToDoTradesError'
+                  - $ref: '#/components/schemas/LiquidationOnlyError'
+                  - $ref: '#/components/schemas/PriceCheckFailedError'
+                  - $ref: '#/components/schemas/PartialLiquidationIsNotAllowedError'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Order not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          $ref: '#/components/responses/DuplicateClientOrderIdError'
+        '429':
+          $ref: '#/components/responses/RateLimitedResponse'
+        '503':
+          description: Service Unavailable / Dealer not found
+        '504':
+          description: Gateway Timeout - Dealer response timed out
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /cancelOrder:
+    post:
+      summary: Cancel an order
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelOrderRequest'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: Error response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidPayloadError'
+                  - $ref: '#/components/schemas/GenericError'
+                  - $ref: '#/components/schemas/InvalidRequestBodyError'
+                  - $ref: '#/components/schemas/CannotCancelOrderError'
+                  - $ref: '#/components/schemas/ClientLockedTradeError'
+                  - $ref: '#/components/schemas/NonTradingHourError'
+                  - $ref: '#/components/schemas/OrderExecutionPendingError'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Order not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/RateLimitedResponse'
+        '503':
+          description: Service Unavailable / Dealer not found
+        '504':
+          description: Gateway Timeout - Dealer response timed out
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /addDeal:
+    post:
+      summary: Add a deal
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddDealRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  propertyName: netting
+                  mapping:
+                    false: '#/components/schemas/AddDealResponse'
+                    true: '#/components/schemas/AddDealNettingResponse' 
+                oneOf:
+                  - $ref: '#/components/schemas/AddDealResponse'
+                  - $ref: '#/components/schemas/AddDealNettingResponse'
+        '202':
+          description: Request accepted for processing
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  propertyName: type
+                  mapping:
+                    HEDGE: '#/components/schemas/HedgeProcess'
+                    DELAY: '#/components/schemas/DelayProcess'
+                    MANUAL: '#/components/schemas/ManualProcess'
+                oneOf:
+                  - $ref: '#/components/schemas/HedgeProcess'
+                  - $ref: '#/components/schemas/DelayProcess'
+                  - $ref: '#/components/schemas/ManualProcess'
+        '400':
+          description: Error response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidPayloadError'
+                  - $ref: '#/components/schemas/GenericError'
+                  - $ref: '#/components/schemas/ShortMarginError'
+                  - $ref: '#/components/schemas/InvalidRequestBodyError'
+                  - $ref: '#/components/schemas/InvalidMinimumTradeLotError'
+                  - $ref: '#/components/schemas/InvalidIncrementTradeLotError'
+                  - $ref: '#/components/schemas/InvalidAmountError'
+                  - $ref: '#/components/schemas/LimitOrOpLotError'
+                  - $ref: '#/components/schemas/CannotGetDealTokenError'
+                  - $ref: '#/components/schemas/ExceedAutoDealLimitError2'
+                  - $ref: '#/components/schemas/InvalidLastDealDurationError'
+                  - $ref: '#/components/schemas/CutLossProcessingError'
+                  - $ref: '#/components/schemas/AccountExpiredError'
+                  - $ref: '#/components/schemas/AmountLessThanMinimumOrderSizeError'
+                  - $ref: '#/components/schemas/ClientLockedTradeError'
+                  - $ref: '#/components/schemas/NotAvailableToAddDealError'
+                  - $ref: '#/components/schemas/NonTradingHourError'
+                  - $ref: '#/components/schemas/NotAvailableToTradeThisContractError'
+                  - $ref: '#/components/schemas/InvalidAccountError'
+                  - $ref: '#/components/schemas/NoOpenPositionForLiquidationError'
+                  - $ref: '#/components/schemas/ExceedMaxOrderLotError'
+                  - $ref: '#/components/schemas/OverrideFailError'
+                  - $ref: '#/components/schemas/NoPrivilegeToOverrideError'
+                  - $ref: '#/components/schemas/FreeMarginDeficitExceedOverrideAmountError'
+                  - $ref: '#/components/schemas/ForbiddenToDoSelfOverridingError'
+                  - $ref: '#/components/schemas/NotAllowToDoTradesError'
+                  - $ref: '#/components/schemas/LiquidationOnlyError'
+                  - $ref: '#/components/schemas/PriceCheckFailedError'
+                  - $ref: '#/components/schemas/PartialLiquidationIsNotAllowedError'
+                  - $ref: '#/components/schemas/PriceTagRequiredError'
+        '401':
+          description: Unauthorized
+        '409':
+          $ref: '#/components/responses/DuplicateClientOrderIdError'
+        '429':
+          $ref: '#/components/responses/RateLimitedResponse'
+        '503':
+          description: Service Unavailable / Dealer not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /editDealOcoPair:
+    post:
+      summary: Edit OCO pair for a deal
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditDealOCOPairRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditDealOcoPairResponse'
+        '400':
+          description: Error response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidPayloadError'
+                  - $ref: '#/components/schemas/GenericError'
+                  - $ref: '#/components/schemas/ShortMarginError'
+                  - $ref: '#/components/schemas/InvalidRequestBodyError'
+                  - $ref: '#/components/schemas/LiquidationExistError'
+                  - $ref: '#/components/schemas/UnableToEditAlertedOrderError'
+                  - $ref: '#/components/schemas/CannotCancelOrderError'
+                  - $ref: '#/components/schemas/ExceedAutoDealLimitError'
+                  - $ref: '#/components/schemas/InvalidMinimumTradeLotError'
+                  - $ref: '#/components/schemas/InvalidIncrementTradeLotError'
+                  - $ref: '#/components/schemas/InvalidAmountError'
+                  - $ref: '#/components/schemas/LimitOrOpLotError'
+                  - $ref: '#/components/schemas/CannotGetDealTokenError'
+                  - $ref: '#/components/schemas/CutLossProcessingError'
+                  - $ref: '#/components/schemas/AmountLessThanMinimumOrderSizeError'
+                  - $ref: '#/components/schemas/ClientLockedTradeError'
+                  - $ref: '#/components/schemas/NotAvailableToAddOrModifyOrderError'
+                  - $ref: '#/components/schemas/NonTradingHourError'
+                  - $ref: '#/components/schemas/NotAvailableToTradeThisContractError'
+                  - $ref: '#/components/schemas/InvalidAccountError'
+                  - $ref: '#/components/schemas/InvalidStopOrderError'
+                  - $ref: '#/components/schemas/NoOpenPositionForLiquidationError'
+                  - $ref: '#/components/schemas/ExceedMaxOrderLotError'
+                  - $ref: '#/components/schemas/OverrideFailError'
+                  - $ref: '#/components/schemas/NoPrivilegeToOverrideError'
+                  - $ref: '#/components/schemas/FreeMarginDeficitExceedOverrideAmountError'
+                  - $ref: '#/components/schemas/ForbiddenToDoSelfOverridingError'
+                  - $ref: '#/components/schemas/NotAllowToDoTradesError'
+                  - $ref: '#/components/schemas/LiquidationOnlyError'
+                  - $ref: '#/components/schemas/OrderExecutionPendingError'
+                  - $ref: '#/components/schemas/PriceCheckFailedError'
+                  - $ref: '#/components/schemas/PartialLiquidationIsNotAllowedError'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Float not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          $ref: '#/components/responses/DuplicateClientOrderIdError'
+        '429':
+          $ref: '#/components/responses/RateLimitedResponse'
+        '503':
+          description: Service Unavailable / Dealer not found
+        '504':
+          description: Gateway Timeout - Dealer response timed out
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /liquidate:
+    post:
+      summary: Liquidate a position
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LiquidateRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  propertyName: netting
+                  mapping:
+                    false: '#/components/schemas/LiquidationResponse'
+                    true: '#/components/schemas/LiquidationNettingResponse'
+                oneOf:
+                  - $ref: '#/components/schemas/LiquidationResponse'
+                  - $ref: '#/components/schemas/LiquidationNettingResponse'
+        '202':
+          description: Request accepted for processing
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  propertyName: type
+                  mapping:
+                    HEDGE: '#/components/schemas/HedgeProcess'
+                    DELAY: '#/components/schemas/DelayProcess'
+                    MANUAL: '#/components/schemas/ManualProcess'
+                oneOf:
+                  - $ref: '#/components/schemas/HedgeProcess'
+                  - $ref: '#/components/schemas/DelayProcess'
+                  - $ref: '#/components/schemas/ManualProcess'
+        '400':
+          description: Error response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidPayloadError'
+                  - $ref: '#/components/schemas/GenericError'
+                  - $ref: '#/components/schemas/ShortMarginError'
+                  - $ref: '#/components/schemas/InvalidRequestBodyError'
+                  - $ref: '#/components/schemas/InvalidMinimumTradeLotError'
+                  - $ref: '#/components/schemas/InvalidIncrementTradeLotError'
+                  - $ref: '#/components/schemas/InvalidAmountError'
+                  - $ref: '#/components/schemas/LimitOrOpLotError'
+                  - $ref: '#/components/schemas/CannotGetDealTokenError'
+                  - $ref: '#/components/schemas/ExceedAutoDealLimitError2'
+                  - $ref: '#/components/schemas/InvalidLastDealDurationError'
+                  - $ref: '#/components/schemas/CutLossProcessingError'
+                  - $ref: '#/components/schemas/AccountExpiredError'
+                  - $ref: '#/components/schemas/AmountLessThanMinimumOrderSizeError'
+                  - $ref: '#/components/schemas/ClientLockedTradeError'
+                  - $ref: '#/components/schemas/NotAvailableToAddDealError'
+                  - $ref: '#/components/schemas/NonTradingHourError'
+                  - $ref: '#/components/schemas/NotAvailableToTradeThisContractError'
+                  - $ref: '#/components/schemas/InvalidAccountError'
+                  - $ref: '#/components/schemas/NoOpenPositionForLiquidationError'
+                  - $ref: '#/components/schemas/ExceedMaxOrderLotError'
+                  - $ref: '#/components/schemas/OverrideFailError'
+                  - $ref: '#/components/schemas/NoPrivilegeToOverrideError'
+                  - $ref: '#/components/schemas/FreeMarginDeficitExceedOverrideAmountError'
+                  - $ref: '#/components/schemas/ForbiddenToDoSelfOverridingError'
+                  - $ref: '#/components/schemas/NotAllowToDoTradesError'
+                  - $ref: '#/components/schemas/LiquidationOnlyError'
+                  - $ref: '#/components/schemas/PriceCheckFailedError'
+                  - $ref: '#/components/schemas/PartialLiquidationIsNotAllowedError'
+                  - $ref: '#/components/schemas/PriceTagRequiredError'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Float not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          $ref: '#/components/responses/DuplicateClientOrderIdError'
+        '429':
+          $ref: '#/components/responses/RateLimitedResponse'
+        '503':
+          description: Service Unavailable / Dealer not found
+        '504':
+          description: Gateway Timeout - Dealer response timed out
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /accountBalance:
+    get:
+      summary: Get account balance
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountBalance'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/RateLimitedResponse'
+        '503':
+          description: Service Unavailable / Dealer not found
+        '504':
+          description: Gateway Timeout - Dealer response timed out
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /positionDetail:
+    get:
+      summary: Get position detail
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: ref
+          required: true
+          schema:
+            type: string
+          description: Position reference number
+      responses:
+        '200':
+          description: Successful response. There is a slight propagation delay for the system to update after a deal is successfully added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenPositionV2'
+        '400':
+          description: Bad Request - e.g. ref query string is not an integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Position detail not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/RateLimitedResponse'
+        '503':
+          description: Service Unavailable / Dealer not found
+        '504':
+          description: Gateway Timeout - Dealer response timed out
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /updateEventStream:
+    get:
+      summary: get Position / Order update Event Stream (SSE)
+      description: get Position / Order update Event Stream (SSE)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Position / Order update Event Stream
+          content:
+            text/event-stream:
+              schema:
+                $ref: "#/components/schemas/SseUpdateEvent"
+        '401':
+          description: Unauthorized
+        '429':
+          $ref: '#/components/responses/RateLimitedResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /chartCode:
+    get:
+      summary: Get chart instrument code-to-name mapping
+      description: >
+        Returns a mapping of contract code to chart code. No authentication required. 
+        The result is cached in-memory for 30 minutes, so changes may take up to 30 minutes to appear.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChartCodeMapping'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  responses:
+    RateLimitedResponse:
+      description: Rate limit exceeded
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: Rate limit exceeded
+    DuplicateClientOrderIdError:
+      description: clientOrderId duplicated, a request with this id was already accepted.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+                const: DUPLICATE_CLIENT_ORDER_ID
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    AddOrderRequest:
+      type: object
+      required:
+        - contractCode
+        - price
+        - buyOrSell
+        - amount
+        - close
+        - limitOrStop
+        - goodTill
+      properties:
+        clientOrderId:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+          description: >
+            Optional client-generated integer for duplicate-request detection.
+            Once a request with this id is accepted, any later request reusing the same id
+            for the same account within the trade date is rejected with 409.
+        buyOrSell:
+          type: boolean
+          description: "true = buy, false = sell"
+        contractCode:
+          type: string
+          description: Contract code (e.g., "XAUUSD")
+        limitOrStop:
+          type: boolean
+          description: "true = limit order, false = stop order"
+        goodTill:
+          type: integer
+          minimum: 0
+          maximum: 2
+          description: 0 = Friday, 1 = Cancel, 2 = Day End
+        close:
+          type: boolean
+          description: true = Close, false = Open
+        takeProfitGoodTill:
+          type: integer
+          minimum: 0
+          maximum: 2
+          description: 0 = Friday, 1 = Cancel, 2 = Day End
+        stopLossGoodTill:
+          type: integer
+          minimum: 0
+          maximum: 2
+          description: 0 = Friday, 1 = Cancel, 2 = Day End
+        price:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        takeProfitPrice:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        stopLossPrice:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        refOrder:
+          type: string
+          description: reference of close order, default "-1"
+        amount:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+
+    AddOrderResponse:
+      type: object
+      required:
+        - orderNo
+      properties:
+        orderNo:
+          type: string
+
+    EditOrderRequest:
+      type: object
+      required:
+        - orderNo
+      properties:
+        clientOrderId:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+          description: >
+            Optional client-generated integer for duplicate-request detection.
+            Once a request with this id is accepted, any later request reusing the same id
+            for the same account within the trade date is rejected with 409.
+        orderNo:
+          type: string
+        price:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        amount:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        goodTill:
+          type: integer
+          minimum: 0
+          maximum: 2
+          description: 0 = Friday, 1 = Cancel, 2 = Day End
+        takeProfitPrice:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        takeProfitGoodTill:
+          type: integer
+          minimum: 0
+          maximum: 2
+          description: 0 = Friday, 1 = Cancel, 2 = Day End
+        stopLossPrice:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        stopLossGoodTill:
+          type: integer
+          minimum: 0
+          maximum: 2
+          description: 0 = Friday, 1 = Cancel, 2 = Day End
+    EditOrderResponse:
+      type: object
+      required:
+        - orderNo
+      properties:
+        orderNo:
+          type: string
+
+    CancelOrderRequest:
+      type: object
+      required:
+        - orderNo
+        - comment
+      properties:
+        orderNo:
+          type: string
+        comment:
+          type: string
+
+    AddDealRequest:
+      oneOf:
+        - $ref: '#/components/schemas/AddDealMarketRequest'
+        - $ref: '#/components/schemas/AddDealQuotedRequest'
+      discriminator:
+        propertyName: priceMode
+        mapping:
+          '1': '#/components/schemas/AddDealMarketRequest'
+          '2': '#/components/schemas/AddDealQuotedRequest'
+
+    AddDealMarketRequest:
+      type: object
+      required:
+        - priceMode
+        - contractCode
+        - amount
+        - buyOrSell
+      properties:
+        clientOrderId:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+          description: >
+            Optional client-generated integer for duplicate-request detection.
+            Once a request with this id is accepted, any later request reusing the same id
+            for the same account within the trade date is rejected with 409.
+        priceMode:
+          type: integer
+          const: 1
+          description: 1 = market mode (price and priceTag must be omitted; server uses the latest quote)
+        contractCode:
+          type: string
+        amount:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        buyOrSell:
+          type: boolean
+        acceptPips:
+          type: integer
+          minimum: 0
+          default: 0
+          description: Slippage tolerance in pips
+        takeProfitPrice:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        takeProfitGoodTill:
+          type: integer
+          minimum: 0
+          maximum: 2
+          description: 0 = Friday, 1 = Cancel, 2 = Day End
+        stopLossPrice:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        stopLossGoodTill:
+          type: integer
+          minimum: 0
+          maximum: 2
+          description: 0 = Friday, 1 = Cancel, 2 = Day End
+
+    AddDealQuotedRequest:
+      type: object
+      required:
+        - priceMode
+        - contractCode
+        - amount
+        - buyOrSell
+        - price
+      properties:
+        clientOrderId:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+          description: >
+            Optional client-generated integer for duplicate-request detection.
+            Once a request with this id is accepted, any later request reusing the same id
+            for the same account within the trade date is rejected with 409.
+        priceMode:
+          type: integer
+          const: 2
+          description: 2 = quoted mode (price required, priceTag required when server enabled price checking)
+        contractCode:
+          type: string
+        amount:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        buyOrSell:
+          type: boolean
+        acceptPips:
+          type: integer
+          minimum: 0
+          default: 0
+          description: Slippage tolerance in pips
+        takeProfitPrice:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        takeProfitGoodTill:
+          type: integer
+          minimum: 0
+          maximum: 2
+          description: 0 = Friday, 1 = Cancel, 2 = Day End
+        stopLossPrice:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        stopLossGoodTill:
+          type: integer
+          minimum: 0
+          maximum: 2
+          description: 0 = Friday, 1 = Cancel, 2 = Day End
+        price:
+          type: number
+          format: double
+        priceTag:
+          type: string
+          description: >
+            Quote token in the form `${tag};${price}` (e.g. `LLG1775716357987;4762.9`).
+            reject with `{ "msg": "710" }` when priceTag is stale or invalid.
+            reject with `{ "msg": "2001" }` when priceTag is null and server enabled price checking.
+    AddDealResponse:
+      type: object
+      required:
+        - netting
+        - dealRef
+      properties:
+        netting:
+          type: boolean
+          const: false
+        dealRef:
+          type: string
+
+    AddDealNettingResponse:
+      type: object
+      required:
+        - netting
+        - liquidateRef
+      properties:
+        netting:
+          type: boolean
+          const: true
+        liquidateRef:
+          type: string
+
+    EditDealOCOPairRequest:
+      type: object
+      required:
+        - orderNo
+      properties:
+        clientOrderId:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+          description: >
+            Optional client-generated integer for duplicate-request detection.
+            Once a request with this id is accepted, any later request reusing the same id
+            for the same account within the trade date is rejected with 409.
+        orderNo:
+          type: string
+        takeProfitPrice:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        takeProfitGoodTill:
+          type: integer
+          minimum: 0
+          maximum: 2
+          description: 0 = Friday, 1 = Cancel, 2 = Day End
+        stopLossPrice:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        stopLossGoodTill:
+          type: integer
+          minimum: 0
+          maximum: 2
+          description: 0 = Friday, 1 = Cancel, 2 = Day End
+
+    LiquidateRequest:
+      oneOf:
+        - $ref: '#/components/schemas/LiquidateMarketRequest'
+        - $ref: '#/components/schemas/LiquidateQuotedRequest'
+      discriminator:
+        propertyName: priceMode
+        mapping:
+          '1': '#/components/schemas/LiquidateMarketRequest'
+          '2': '#/components/schemas/LiquidateQuotedRequest'
+
+    LiquidateMarketRequest:
+      type: object
+      required:
+        - priceMode
+        - orderNo
+        - amount
+      properties:
+        clientOrderId:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+          description: >
+            Optional client-generated integer for duplicate-request detection.
+            Once a request with this id is accepted, any later request reusing the same id
+            for the same account within the trade date is rejected with 409.
+        priceMode:
+          type: integer
+          const: 1
+          description: 1 = market mode (price and priceTag must be omitted; server uses the latest quote)
+        orderNo:
+          type: string
+        acceptPips:
+          type: integer
+          minimum: 0
+          default: 0
+          description: Slippage tolerance in pips
+        amount:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+
+    LiquidateQuotedRequest:
+      type: object
+      required:
+        - priceMode
+        - orderNo
+        - amount
+        - price
+      properties:
+        clientOrderId:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+          description: >
+            Optional client-generated integer for duplicate-request detection.
+            Once a request with this id is accepted, any later request reusing the same id
+            for the same account within the trade date is rejected with 409.
+        priceMode:
+          type: integer
+          const: 2
+          description: 2 = quoted mode (price required, priceTag required when server enabled price checking)
+        orderNo:
+          type: string
+        acceptPips:
+          type: integer
+          minimum: 0
+          default: 0
+          description: Slippage tolerance in pips
+        amount:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        price:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+        priceTag:
+          type: string
+          description: >
+            Quote token in the form `${tag};${price}` (e.g. `LLG1775716357987;4762.9`).
+            reject with `{ "msg": "710" }` when priceTag is stale or invalid.
+            reject with `{ "msg": "2001" }` when priceTag is null and server enabled price checking.
+
+    LiquidationResponse:
+      type: object
+      required:
+        - netting
+        - liqRef
+      properties:
+        netting:
+          type: boolean
+          const: false
+        liqRef:
+          type: string
+    LiquidationNettingResponse:
+      type: object
+      required:
+        - netting
+      properties:
+        netting:
+          type: boolean
+          const: true
+        dealRef:
+          type: string
+    EditDealOcoPairResponse:
+      type: object
+      properties:
+        limitOrderRef:
+          type: string
+        stopOrderRef:
+          type: string
+
+    AccountBalance:
+      type: object
+      properties:
+        settleCurrency:
+          type: string
+        displayCurrency:
+          type: string
+        fixedSettlementExRate:
+          type: number
+          format: double
+        creditLimit:
+          type: number
+          format: double
+        freeMargin:
+          type: number
+          format: double
+        balance:
+          type: number
+          format: double
+        equity:
+          type: number
+          format: double
+        dayPNL:
+          type: number
+          format: double
+        floatingPNL:
+          type: number
+          format: double
+        marginRatio:
+          type: number
+          format: double
+          description: Decimal ratio, e.g. 2.2 means 220%
+        marginAlertRatio:
+          type: number
+          format: double
+          description: Decimal ratio, e.g. 1.0 means 100%
+        marginCallRatio:
+          type: number
+          format: double
+          description: Decimal ratio, e.g. 0.75 means 75%
+        marginCutRatio:
+          type: number
+          format: double
+          description: Decimal ratio, e.g. 0.5 means 50%
+        marginState:
+          type: integer
+          description: alert level, 0 = normal, 1 = alert, 2 = call, 3 = cut
+        netting:
+          type: boolean
+
+    OpenPositionV2:
+      type: object
+      properties:
+        interest:
+          type: number
+          format: double
+        storage:
+          type: number
+          format: double
+        orderNo:
+          type: integer
+        contractCode:
+          type: string
+        buyOrSell:
+          type: boolean
+        amount:
+          type: number
+          format: double
+        execPrice:
+          type: number
+          format: double
+        floating:
+          type: number
+          format: double
+        revalueRate:
+          type: number
+          format: double
+        createdTime:
+          type: string
+          format: date-time
+        executedTime:
+          type: string
+          format: date-time
+        commission:
+          type: number
+          format: double
+        takeProfitPrice:
+          type: number
+          format: double
+        stopLossPrice:
+          type: number
+          format: double
+        takeProfitGoodTill:
+          type: integer
+        stopLossGoodTill:
+          type: integer
+        takeProfitGoodTillDate:
+          type: string
+          format: date-time
+        stopLossGoodTillDate:
+          type: string
+          format: date-time
+        takeProfitOrder:
+          $ref: '#/components/schemas/Order'
+        stopLossOrder:
+          $ref: '#/components/schemas/Order'
+
+    Order:
+      type: object
+      properties:
+        orderNo:
+          type: integer
+        contractCode:
+          type: string
+        buyOrSell:
+          type: boolean
+        limitOrStop:
+          type: boolean
+        requestPrice:
+          type: number
+          format: double
+        executedPrice:
+          type: number
+          format: double
+        goodTill:
+          type: integer
+        goodTillDate:
+          type: string
+          format: date-time
+        amount:
+          type: number
+          format: double
+        orderType:
+          type: integer
+        liquidationMethod:
+          type: integer
+        liquidationRef:
+          type: string
+        createdTime:
+          type: string
+          format: date-time
+        executedTime:
+          type: string
+          format: date-time
+        takeProfitPrice:
+          type: number
+          format: double
+        stopLossPrice:
+          type: number
+          format: double
+
+    ErrorResponse:
+      type: object
+      description: Error response
+      properties:
+        msg:
+          type: string
+      required:
+        - msg
+
+    ChartCodeMapping:
+      type: object
+      description: >
+        Mapping of contract code to chart code.
+      additionalProperties:
+        type: string
+      example:
+        XAUUSD: XAUUSDUSD
+        EURUSD: EURUSDUSD
+        USDJPY: USDUSDJPY
+
+    SseUpdateEvent:
+      type: object
+      description:  Position / Order update Event (SSE)
+      properties:
+        id:
+          type: string
+        event:
+          type: string
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/PositionUpdate"
+            - $ref: "#/components/schemas/WorkingOrderUpdate"
+            - $ref: "#/components/schemas/ExecutedOrderUpdate"
+            - $ref: "#/components/schemas/CancelledOrderUpdate"
+            - $ref: "#/components/schemas/OrderExecuted"
+        retry:
+          type: integer
+
+    PositionUpdate:
+      type: object
+      description: "Event: PositionUpdate"
+      properties:
+        added:
+          type: array
+          description: Newly opened positions
+          items:
+            $ref: "#/components/schemas/OpenPositionRecord"
+        modified:
+          type: array
+          description: Updated positions
+          items:
+            $ref: "#/components/schemas/OpenPositionRecord"
+        deleted:
+          type: array
+          description: Closed position reference numbers
+          items:
+            type: integer
+        orderNos:
+          type: array
+          items:
+            type: string
+
+    OpenPositionRecord:
+      type: object
+      properties:
+        orderNo:
+          type: integer
+        contract:
+          type: string
+        tradeDate:
+          type: string
+        buySell:
+          type: string
+          enum: [ B, S ]
+        amount:
+          type: number
+          format: double
+        execPrice:
+          type: number
+          format: double
+        floating:
+          type: number
+          format: double
+        interest:
+          type: number
+          format: double
+        commission:
+          type: number
+          format: double
+        revalueRate:
+          type: number
+          format: double
+        storage:
+          type: number
+          format: double
+        initialRatio:
+          type: number
+          format: double
+        contractSize:
+          type: number
+          format: double
+        decimalPlace:
+          type: integer
+        valueDate:
+          type: string
+        newPosMargin:
+          type: number
+          format: double
+        hedgePosMargin:
+          type: number
+          format: double
+        floatInterest:
+          type: number
+          format: double
+        latestMargin:
+          type: number
+          format: double
+        account:
+          type: string
+        synNumber:
+          type: string
+        createdTime:
+          type: string
+          format: date-time
+        executedTime:
+          type: string
+          format: date-time
+
+    WorkingOrderUpdate:
+      type: object
+      description: "Event: WorkingOrderUpdate"
+      properties:
+        orderNos:
+          type: array
+          items:
+            type: string
+
+    ExecutedOrderUpdate:
+      type: object
+      description: "Event: ExecutedOrderUpdate"
+      properties:
+        orderNos:
+          type: array
+          items:
+            type: string
+
+    CancelledOrderUpdate:
+      type: object
+      description: "Event: CanceledOrderUpdate"
+      properties:
+        orderNos:
+          type: array
+          items:
+            type: string
+
+    OrderExecuted:
+      type: object
+      description: "Event: SystemMessage, Order executed notification (system message with msgcd1=609)"
+      properties:
+        msg1:
+          type: integer
+          description: Order reference
+        msg2:
+          type: integer
+          description: Execution status
+
+    InvalidRequestBodyError:
+      type: object
+      description: Invalid Request Body
+      properties:
+        msg:
+          type: string
+          const: "400"
+      required:
+        - msg
+
+    GenericError:
+      type: object
+      description: Generic Error
+      properties:
+        msg:
+          type: string
+      required:
+        - msg
+    InvalidPayloadError:
+      type: object
+      description: Invalid payload
+      properties:
+        msg:
+          type: string
+          const: INVALID_PAYLOAD
+        description:
+          type: string
+      required:
+        - msg
+    CannotCancelOrderError:
+      type: object
+      description: Cannot Cancel Order, `EnableAETrade` is 0 or `AlertPrice` is not null
+      properties:
+        msg:
+          type: string
+          const: "602"
+      required:
+        - msg
+
+    ClientLockedTradeError:
+      type: object
+      description: Client locked trade
+      properties:
+        msg:
+          type: string
+          const: "723"
+      required:
+        - msg
+
+    NonTradingHourError:
+      type: object
+      description: Non-Trading Hour
+      properties:
+        msg:
+          type: string
+          const: "933"
+      required:
+        - msg
+
+    OrderExecutionPendingError:
+      type: object
+      description: Order Execution Pending
+      properties:
+        msg:
+          type: string
+          const: "1002"
+      required:
+        - msg
+
+    ShortMarginError:
+      type: object
+      description: Reject by Short Margin, check `extra` for the details
+      properties:
+        msg:
+          type: string
+          const: "706"
+      required:
+        - msg
+
+    LiquidationExistError:
+      type: object
+      description: Liquidation order type already existed
+      properties:
+        msg:
+          type: string
+          const: "600"
+      required:
+        - msg
+
+    UnableToEditAlertedOrderError:
+      type: object
+      description: Unable to edit alerted order
+      properties:
+        msg:
+          type: string
+          const: "601"
+      required:
+        - msg
+
+    ExceedAutoDealLimitError:
+      type: object
+      description: Exceed Auto Deal Limit (order routing limit)
+      properties:
+        msg:
+          type: string
+          const: "618"
+      required:
+        - msg
+
+    InvalidMinimumTradeLotError:
+      type: object
+      description: Invalid Minimum Trade LOT
+      properties:
+        msg:
+          type: string
+          const: "620"
+      required:
+        - msg
+
+    InvalidIncrementTradeLotError:
+      type: object
+      description: Invalid Increment Trade Lot
+      properties:
+        msg:
+          type: string
+          const: "621"
+      required:
+        - msg
+
+    InvalidAmountError:
+      type: object
+      description: Invalid Amount
+      properties:
+        msg:
+          type: string
+          const: "622"
+      required:
+        - msg
+
+    LimitOrOpLotError:
+      type: object
+      description: Exceed [Gross Order / Margin / Trade Limit or [Max Net / Contract Max Net] OP Lot
+      properties:
+        msg:
+          type: string
+          const: "706"
+      required:
+        - msg
+
+    CannotGetDealTokenError:
+      type: object
+      description: Cannot get deal token
+      properties:
+        msg:
+          type: string
+          const: "710"
+      required:
+        - msg
+
+    CutLossProcessingError:
+      type: object
+      description: Cut Loss Processing
+      properties:
+        msg:
+          type: string
+          const: "716"
+      required:
+        - msg
+
+    AmountLessThanMinimumOrderSizeError:
+      type: object
+      description: Amount Less than Minimum Order Size
+      properties:
+        msg:
+          type: string
+          const: "720"
+      required:
+        - msg
+
+    NotAvailableToAddOrModifyOrderError:
+      type: object
+      description: Not Available to add/modify order
+      properties:
+        msg:
+          type: string
+          const: "931"
+      required:
+        - msg
+
+    NotAvailableToTradeThisContractError:
+      type: object
+      description: Not Available to trade this contract
+      properties:
+        msg:
+          type: string
+          const: "934"
+      required:
+        - msg
+
+    InvalidAccountError:
+      type: object
+      description: Invalid account
+      properties:
+        msg:
+          type: string
+          const: "935"
+      required:
+        - msg
+
+    InvalidStopOrderError:
+      type: object
+      description: Invalid Stop Order
+      properties:
+        msg:
+          type: string
+          const: "936"
+      required:
+        - msg
+
+    NoOpenPositionForLiquidationError:
+      type: object
+      description: No open position for liquidation
+      properties:
+        msg:
+          type: string
+          const: "937"
+      required:
+        - msg
+
+    ExceedMaxOrderLotError:
+      type: object
+      description: Exceed Max Order Lot
+      properties:
+        msg:
+          type: string
+          const: "939"
+      required:
+        - msg
+
+    OverrideFailError:
+      type: object
+      description: Override Fail. Invalid password or the Override User is not Active
+      properties:
+        msg:
+          type: string
+          const: "940"
+      required:
+        - msg
+
+    NoPrivilegeToOverrideError:
+      type: object
+      description: No privilege to do override
+      properties:
+        msg:
+          type: string
+          const: "941"
+      required:
+        - msg
+
+    FreeMarginDeficitExceedOverrideAmountError:
+      type: object
+      description: Free margin Deficit exceeds your authorized Override Amount
+      properties:
+        msg:
+          type: string
+          const: "943"
+      required:
+        - msg
+
+    ForbiddenToDoSelfOverridingError:
+      type: object
+      description: Forbidden to do self Overriding
+      properties:
+        msg:
+          type: string
+          const: "945"
+      required:
+        - msg
+
+    NotAllowToDoTradesError:
+      type: object
+      description: Not allow to do trades
+      properties:
+        msg:
+          type: string
+          const: "948"
+      required:
+        - msg
+
+    LiquidationOnlyError:
+      type: object
+      description: Liquidation Only
+      properties:
+        msg:
+          type: string
+          const: "954"
+      required:
+        - msg
+
+    PriceCheckFailedError:
+      type: object
+      description: Price Check Failed
+      properties:
+        msg:
+          type: string
+          const: "1010"
+      required:
+        - msg
+
+    PartialLiquidationIsNotAllowedError:
+      type: object
+      description: Partial Liquidation is not allowed
+      properties:
+        msg:
+          type: string
+          const: "1011"
+      required:
+        - msg
+
+    ExceedAutoDealLimitError2:
+      type: object
+      description: Exceed Auto Deal Limit (deal routing limit)
+      properties:
+        msg:
+          type: string
+          const: "713"
+      required:
+        - msg
+
+    InvalidLastDealDurationError:
+      type: object
+      description: Invalid Last Deal Duration
+      properties:
+        msg:
+          type: string
+          const: "715"
+      required:
+        - msg
+
+    AccountExpiredError:
+      type: object
+      description: Account expired
+      properties:
+        msg:
+          type: string
+          const: "718"
+      required:
+        - msg
+
+    NotAvailableToAddDealError:
+      type: object
+      description: Not Available to add deal
+      properties:
+        msg:
+          type: string
+          const: "932"
+      required:
+        - msg
+    HedgeProcess:
+      type: object
+      description: Hedging in progress
+      properties:
+        type:
+          type: string
+          const: HEDGE
+        ref:
+          type: array
+          items:
+            type: string
+            description: deal reference number hedging
+        fail:
+          type: array
+          items:
+            type: object
+            properties:
+              ref:
+                type: string
+                description: Deal reference
+              result:
+                oneOf:
+                  - $ref: '#/components/schemas/LPStatusOfflineReject'
+                  - $ref: '#/components/schemas/DelayProcess'
+                  - $ref: '#/components/schemas/GenericError'
+      required:
+        - ref
+        - fail
+    DelayProcess:
+      type: object
+      description: Waiting for process
+      properties:
+        type:
+          type: string
+          const: DELAY
+      required:
+        - type
+    ManualProcess:
+      type: object
+      description: Waiting for process
+      properties:
+        type:
+          type: string
+          const: MANUAL
+      required:
+        - type
+    LPStatusOfflineReject:
+      type: object
+      properties:
+        type:
+          type: string
+          const: "LP_STATUS_OFFLINE_REJECT"
+          description: "LP is offline"
+      required:
+        - type
+
+    PriceTagRequiredError:
+      type: object
+      description: priceTag required when priceMode=2 (quoted) and server enabled price checking
+      properties:
+        msg:
+          type: string
+          const: "2001"
+      required:
+        - msg

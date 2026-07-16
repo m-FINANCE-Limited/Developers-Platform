@@ -1,0 +1,15 @@
+# Dependencies
+/node_modules
+
+# Docusaurus output
+/.docusaurus
+/build
+/.cache-loader
+
+# Local configuration
+.env
+.env.*.local
+
+# Editor and operating system files
+.DS_Store
+*.log

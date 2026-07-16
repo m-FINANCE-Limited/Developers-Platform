@@ -1,0 +1,35 @@
+default:
+  image: oven/bun:1.3.12
+  cache:
+    key: bun-${CI_COMMIT_REF_SLUG}
+    paths:
+      - .bun/install/cache
+
+variables:
+  BUN_INSTALL_CACHE_DIR: ${CI_PROJECT_DIR}/.bun/install/cache
+
+stages:
+  - test
+  - deploy
+
+validate-site:
+  stage: test
+  script:
+    - bun install --frozen-lockfile
+    - bun run typecheck
+    - bun run build
+
+deploy-pages:
+  stage: deploy
+  needs:
+    - validate-site
+  script:
+    - bun install --frozen-lockfile
+    - bun run build
+  pages:
+    publish: build
+  environment:
+    name: gitlab-pages
+    url: ${CI_PAGES_URL}
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
