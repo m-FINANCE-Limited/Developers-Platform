@@ -20,7 +20,7 @@ const config: Config = {
 
   url: siteUrl.origin,
   baseUrl: process.env.BASE_URL ?? inferredBaseUrl,
-  organizationName: 'm-finance',
+  organizationName: 'mF Technologies',
   projectName: 'developers-platform',
   onBrokenLinks: 'throw',
 
@@ -151,7 +151,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} m-FINANCE. Trader Developer Platform.`,
+      copyright: `Copyright © ${new Date().getFullYear()} mF Technologies. Trader Developer Platform.`,
     },
     docs: {
       sidebar: {
