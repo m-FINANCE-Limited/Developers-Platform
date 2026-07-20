@@ -1,4 +1,4 @@
-# Trader Developer Platform
+# mf-Technologies Developer Platform
 
 Developer onboarding and interactive OpenAPI reference for the Trader platform. The site is built with Docusaurus 3.10, TypeScript, Bun, and Redocusaurus.
 

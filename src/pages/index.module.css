@@ -2,9 +2,9 @@
   background:
     linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-    #101311;
+    #24323d;
   background-size: 40px 40px;
-  color: #f2efe6;
+  color: #ffffff;
   overflow: hidden;
 }
 
@@ -24,7 +24,7 @@
 
 .eyebrow {
   align-items: center;
-  color: #aeb4ad;
+  color: #bec7cc;
   display: flex;
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -35,11 +35,11 @@
 }
 
 .eyebrow span:first-child {
-  color: #c4f451;
+  color: #ffcc33;
 }
 
 .eyebrow span:first-child::before {
-  background: #c4f451;
+  background: #ffcc33;
   content: '';
   display: inline-block;
   height: 7px;
@@ -48,7 +48,7 @@
 }
 
 .heroCopy h1 {
-  color: #f2efe6;
+  color: #ffffff;
   font-family: var(--font-display);
   font-size: clamp(4.2rem, 7.4vw, 7.8rem);
   font-weight: 750;
@@ -59,13 +59,13 @@
 }
 
 .heroCopy h1 em {
-  color: #c4f451;
+  color: #ffcc33;
   font-family: var(--font-serif);
   font-weight: 400;
 }
 
 .heroCopy > p {
-  color: #bbc1ba;
+  color: #d1d8dc;
   font-size: 1.08rem;
   line-height: 1.75;
   margin: 44px 0 36px;
@@ -94,29 +94,29 @@
 }
 
 .primaryAction {
-  background: #c4f451;
-  color: #101311;
+  background: #ed1c24;
+  color: #ffffff;
   min-width: 258px;
 }
 
 .primaryAction:hover {
-  background: #f2efe6;
-  color: #101311;
+  background: #ffcc33;
+  color: #24323d;
 }
 
 .secondaryAction {
-  border: 1px solid #515650;
-  color: #f2efe6;
+  border: 1px solid #66747d;
+  color: #ffffff;
 }
 
 .secondaryAction:hover {
-  border-color: #f2efe6;
-  color: #c4f451;
+  border-color: #ffffff;
+  color: #ffcc33;
 }
 
 .heroVisual {
   align-items: center;
-  border-left: 1px solid #383c38;
+  border-left: 1px solid #53616b;
   display: flex;
   justify-content: center;
   min-width: 0;
@@ -126,7 +126,7 @@
 
 .visualIndex,
 .orbitLabel {
-  color: #747a74;
+  color: #aeb9bf;
   font-family: var(--font-mono);
   font-size: 0.66rem;
   letter-spacing: 0.13em;
@@ -144,9 +144,9 @@
 }
 
 .requestPanel {
-  background: #171b18;
-  border: 1px solid #4c514c;
-  box-shadow: 18px 18px 0 #c4f451;
+  background: #2f3e49;
+  border: 1px solid #63717a;
+  box-shadow: 18px 18px 0 #ffcc33;
   max-width: 540px;
   transform: rotate(-1.35deg);
   transition: transform 220ms ease, box-shadow 220ms ease;
@@ -154,7 +154,7 @@
 }
 
 .requestPanel:hover {
-  box-shadow: 10px 10px 0 #c4f451;
+  box-shadow: 10px 10px 0 #ffcc33;
   transform: rotate(0deg) translate(4px, 4px);
 }
 
@@ -167,8 +167,8 @@
 }
 
 .panelBar {
-  border-bottom: 1px solid #3e433e;
-  color: #929891;
+  border-bottom: 1px solid #53616b;
+  color: #bec7cc;
   font-size: 0.65rem;
   justify-content: space-between;
   letter-spacing: 0.1em;
@@ -182,9 +182,9 @@
 }
 
 .liveState i {
-  background: #c4f451;
+  background: #ffcc33;
   border-radius: 50%;
-  box-shadow: 0 0 0 4px rgba(196, 244, 81, 0.12);
+  box-shadow: 0 0 0 4px rgba(255, 204, 51, 0.16);
   display: inline-block;
   height: 6px;
   width: 6px;
@@ -196,8 +196,8 @@
 }
 
 .endpoint span {
-  background: #c4f451;
-  color: #101311;
+  background: #ffcc33;
+  color: #24323d;
   font-size: 0.68rem;
   font-weight: 800;
   padding: 5px 7px;
@@ -206,18 +206,18 @@
 .endpoint code {
   background: transparent;
   border: 0;
-  color: #f2efe6;
+  color: #ffffff;
   font-size: 1.04rem;
   padding: 0;
 }
 
 .codeBlock {
-  background: #111411;
+  background: #202c34;
   border: 0;
-  border-bottom: 1px solid #3e433e;
+  border-bottom: 1px solid #53616b;
   border-radius: 0;
-  border-top: 1px solid #3e433e;
-  color: #d8ddd6;
+  border-top: 1px solid #53616b;
+  color: #e7edf0;
   font-family: var(--font-mono);
   font-size: 0.8rem;
   line-height: 1.75;
@@ -226,7 +226,7 @@
 }
 
 .responseLine {
-  color: #aeb4ad;
+  color: #c7d0d5;
   font-size: 0.7rem;
   gap: 12px;
   padding: 17px 20px;
@@ -234,7 +234,7 @@
 }
 
 .statusCode {
-  color: #c4f451;
+  color: #ffcc33;
   font-weight: 800;
 }
 
@@ -243,7 +243,7 @@
 }
 
 .signalBar {
-  border-top: 1px solid #383c38;
+  border-top: 1px solid #53616b;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   margin: 0 auto;
@@ -251,8 +251,8 @@
 }
 
 .signalBar span {
-  border-right: 1px solid #383c38;
-  color: #aeb4ad;
+  border-right: 1px solid #53616b;
+  color: #d1d8dc;
   font-family: var(--font-mono);
   font-size: 0.66rem;
   letter-spacing: 0.08em;
@@ -266,7 +266,11 @@
 }
 
 .main {
-  background: #f2efe6;
+  background: #ffffff;
+}
+
+[data-theme='dark'] .main {
+  background: #1d2a33;
 }
 
 .journey {
@@ -287,7 +291,7 @@
 .surfaceIntro > p,
 .conceptLead > p {
   align-self: start;
-  color: #087f5b;
+  color: #ed1c24;
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 700;
@@ -298,7 +302,7 @@
 .sectionHeading h2,
 .surfaceIntro h2,
 .conceptLead h2 {
-  color: #151916;
+  color: #24323d;
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 4vw, 4.8rem);
   letter-spacing: -0.055em;
@@ -307,29 +311,49 @@
 }
 
 .sectionHeading > span {
-  color: #5f655f;
+  color: #596872;
   font-size: 0.96rem;
   line-height: 1.65;
   max-width: 350px;
 }
 
+[data-theme='dark'] .sectionHeading h2 {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .sectionHeading > span {
+  color: #c7d0d5;
+}
+
 .journeyGrid {
-  border-left: 1px solid #c7c5bc;
+  border-left: 1px solid #d4dbe0;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 }
 
+[data-theme='dark'] .journeyGrid {
+  border-left-color: #53616b;
+}
+
 .journeyCard {
-  border-bottom: 1px solid #c7c5bc;
-  border-right: 1px solid #c7c5bc;
-  border-top: 1px solid #c7c5bc;
+  border-bottom: 1px solid #d4dbe0;
+  border-right: 1px solid #d4dbe0;
+  border-top: 1px solid #d4dbe0;
   min-height: 360px;
   padding: 24px 22px 30px;
   transition: background 180ms ease, transform 180ms ease;
 }
 
+[data-theme='dark'] .journeyCard {
+  border-color: #53616b;
+}
+
+[data-theme='dark'] .journeyCard:hover {
+  background: #2f3e49;
+}
+
 .journeyCard:hover {
-  background: #e8e5db;
+  background: #f0f3f5;
   transform: translateY(-6px);
 }
 
@@ -342,12 +366,12 @@
 }
 
 .cardTopline span:last-child {
-  color: #087f5b;
+  color: #ed1c24;
   text-transform: uppercase;
 }
 
 .journeyCard > p {
-  color: #747973;
+  color: #687680;
   font-family: var(--font-serif);
   font-size: 1rem;
   font-style: italic;
@@ -355,19 +379,27 @@
 }
 
 .journeyCard h3 {
-  color: #151916;
+  color: #24323d;
   font-family: var(--font-display);
   font-size: 2rem;
   letter-spacing: -0.035em;
   margin: 0;
 }
 
+[data-theme='dark'] .journeyCard h3 {
+  color: #ffffff;
+}
+
 .cardRule {
-  background: #151916;
+  background: #24323d;
   height: 1px;
   margin: 22px 0;
   transform-origin: left;
   transition: transform 180ms ease;
+}
+
+[data-theme='dark'] .cardRule {
+  background: #ffffff;
 }
 
 .journeyCard:hover .cardRule {
@@ -375,10 +407,15 @@
 }
 
 .cardCopy {
-  color: #5a605a;
+  color: #52616b;
   display: block;
   font-size: 0.88rem;
   line-height: 1.65;
+}
+
+[data-theme='dark'] .cardCopy,
+[data-theme='dark'] .journeyCard > p {
+  color: #c7d0d5;
 }
 
 .surfaces {
@@ -390,7 +427,7 @@
 }
 
 .surfaceIntro {
-  background: #c4f451;
+  background: #ffcc33;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -399,13 +436,13 @@
 }
 
 .surfaceIntro > p {
-  color: #151916;
+  color: #24323d;
 }
 
 .surfaceCard {
-  background: #e5e1d6;
-  border-left: 1px solid #bdbbb2;
-  color: #151916;
+  background: #f0f3f5;
+  border-left: 1px solid #d4dbe0;
+  color: #24323d;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -416,37 +453,37 @@
 }
 
 .surfaceCard:hover {
-  background: #d9d5ca;
-  color: #151916;
+  background: #e1e7ea;
+  color: #24323d;
   text-decoration: none;
 }
 
 .surfaceCardDark,
 .surfaceCardDark:hover {
-  background: #151916;
-  color: #f2efe6;
+  background: #24323d;
+  color: #ffffff;
 }
 
 .surfaceCardDark:hover {
-  background: #202620;
+  background: #2f3e49;
 }
 
 .surfaceCardChart,
 .surfaceCardChart:hover {
-  background: #087f5b;
-  color: #f2efe6;
+  background: #ed1c24;
+  color: #ffffff;
 }
 
 .surfaceCardChart:hover {
-  background: #076e50;
+  background: #d81920;
 }
 
 .surfaceCardChart .surfaceTag {
-  color: #c4f451;
+  color: #ffcc33;
 }
 
 .surfaceCardChart p {
-  color: #c3d5cd;
+  color: #f2c3c5;
 }
 
 .surfaceNumber {
@@ -456,7 +493,7 @@
 }
 
 .surfaceTag {
-  color: #087f5b;
+  color: #ed1c24;
   font-family: var(--font-mono);
   font-size: 0.65rem;
   font-weight: 700;
@@ -464,25 +501,31 @@
 }
 
 .surfaceCardDark .surfaceTag {
-  color: #c4f451;
+  color: #ffcc33;
 }
 
 .surfaceCard h3 {
+  color: #24323d;
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 3vw, 3.5rem);
   letter-spacing: -0.055em;
   margin: 12px 0 18px;
 }
 
+.surfaceCard.surfaceCardDark h3,
+.surfaceCard.surfaceCardChart h3 {
+  color: #ffffff !important;
+}
+
 .surfaceCard p {
-  color: #626862;
+  color: #52616b;
   line-height: 1.7;
   margin: 0;
   max-width: 380px;
 }
 
 .surfaceCardDark p {
-  color: #aeb4ad;
+  color: #c7d0d5;
 }
 
 .surfaceFooter {
@@ -498,8 +541,8 @@
 }
 
 .concepts {
-  background: #087f5b;
-  color: #f2efe6;
+  background: #24323d;
+  color: #ffffff;
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
   margin: 0 auto;
@@ -512,17 +555,17 @@
 }
 
 .conceptLead > p {
-  color: #c4f451;
+  color: #ffcc33;
 }
 
 .conceptLead h2 {
-  color: #f2efe6;
+  color: #ffffff;
   margin: 40px 0 48px;
 }
 
 .conceptLead a {
-  border-bottom: 1px solid #f2efe6;
-  color: #f2efe6;
+  border-bottom: 1px solid #ffffff;
+  color: #ffffff;
   display: inline-flex;
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -534,13 +577,13 @@
 }
 
 .conceptList {
-  border-top: 1px solid rgba(242, 239, 230, 0.42);
+  border-top: 1px solid rgba(255, 255, 255, 0.42);
 }
 
 .conceptList a {
   align-items: center;
-  border-bottom: 1px solid rgba(242, 239, 230, 0.42);
-  color: #f2efe6;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.42);
+  color: #ffffff;
   display: grid;
   gap: 20px;
   grid-template-columns: 42px 1fr 1.2fr auto;
@@ -550,7 +593,7 @@
 }
 
 .conceptList a:hover {
-  color: #c4f451;
+  color: #ffcc33;
   padding-left: 12px;
 }
 
@@ -566,7 +609,7 @@
 }
 
 .conceptList small {
-  color: #c3d5cd;
+  color: #c7d0d5;
   line-height: 1.5;
 }
 
@@ -578,7 +621,7 @@
 
   .heroVisual {
     border-left: 0;
-    border-top: 1px solid #383c38;
+    border-top: 1px solid #53616b;
     margin-top: 70px;
     padding: 80px 0 50px;
   }
@@ -636,7 +679,7 @@
   }
 
   .requestPanel {
-    box-shadow: 9px 9px 0 #c4f451;
+    box-shadow: 9px 9px 0 #ffcc33;
   }
 
   .codeBlock {
@@ -650,7 +693,7 @@
   }
 
   .signalBar span {
-    border-bottom: 1px solid #383c38;
+    border-bottom: 1px solid #53616b;
     padding: 16px 8px;
   }
 

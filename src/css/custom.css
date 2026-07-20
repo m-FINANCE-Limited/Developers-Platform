@@ -1,42 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@1,6..72,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Roboto+Condensed:wght@400;500;600;700&display=swap');
 
 :root {
-  --font-display: 'Manrope', sans-serif;
-  --font-serif: 'Newsreader', serif;
-  --font-mono: 'DM Mono', monospace;
-  --ifm-font-family-base: 'Manrope', sans-serif;
-  --ifm-font-family-monospace: 'DM Mono', monospace;
-  --ifm-color-primary: #087f5b;
-  --ifm-color-primary-dark: #077252;
-  --ifm-color-primary-darker: #066c4d;
-  --ifm-color-primary-darkest: #055940;
-  --ifm-color-primary-light: #098c64;
-  --ifm-color-primary-lighter: #0a9269;
-  --ifm-color-primary-lightest: #0ba575;
-  --ifm-background-color: #f7f5ef;
-  --ifm-navbar-background-color: rgba(247, 245, 239, 0.94);
-  --ifm-footer-background-color: #101311;
-  --ifm-heading-color: #151916;
+  --font-display: 'Roboto Condensed', sans-serif;
+  --font-serif: 'Open Sans', sans-serif;
+  --font-mono: 'Roboto Condensed', sans-serif;
+  --ifm-font-family-base: 'Open Sans', sans-serif;
+  --ifm-heading-font-family: 'Roboto Condensed', sans-serif;
+  --ifm-font-family-monospace: 'Roboto Condensed', sans-serif;
+  --ifm-color-primary: #ed1c24;
+  --ifm-color-primary-dark: #d81920;
+  --ifm-color-primary-darker: #ca171d;
+  --ifm-color-primary-darkest: #a71418;
+  --ifm-color-primary-light: #f04b51;
+  --ifm-color-primary-lighter: #f25d62;
+  --ifm-color-primary-lightest: #f7898d;
+  --ifm-background-color: #ffffff;
+  --ifm-font-color-base: #24323d;
+  --ifm-link-color: #ed1c24;
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.96);
+  --ifm-footer-background-color: #24323d;
+  --ifm-heading-color: #24323d;
   --ifm-code-font-size: 90%;
   --ifm-navbar-height: 72px;
   --ifm-global-radius: 0;
   --ifm-button-border-radius: 0;
-  --docusaurus-highlighted-code-line-bg: rgba(8, 127, 91, 0.12);
+  --docusaurus-highlighted-code-line-bg: rgba(237, 28, 36, 0.12);
 }
 
 [data-theme='dark'] {
-  --ifm-color-primary: #c4f451;
-  --ifm-color-primary-dark: #b9f237;
-  --ifm-color-primary-darker: #b3f12a;
-  --ifm-color-primary-darkest: #9fe30e;
-  --ifm-color-primary-light: #cff66b;
-  --ifm-color-primary-lighter: #d5f778;
-  --ifm-color-primary-lightest: #e5faa6;
-  --ifm-background-color: #101311;
-  --ifm-background-surface-color: #171b18;
-  --ifm-navbar-background-color: rgba(16, 19, 17, 0.94);
-  --ifm-heading-color: #f2efe6;
-  --docusaurus-highlighted-code-line-bg: rgba(196, 244, 81, 0.12);
+  --ifm-color-primary: #ffcc33;
+  --ifm-color-primary-dark: #ffc20a;
+  --ifm-color-primary-darker: #f5b800;
+  --ifm-color-primary-darkest: #c79600;
+  --ifm-color-primary-light: #ffd65c;
+  --ifm-color-primary-lighter: #ffda70;
+  --ifm-color-primary-lightest: #ffe8a8;
+  --ifm-background-color: #1d2a33;
+  --ifm-background-surface-color: #2f3e49;
+  --ifm-font-color-base: #e7edf0;
+  --ifm-link-color: #ffcc33;
+  --ifm-navbar-background-color: rgba(36, 50, 61, 0.96);
+  --ifm-heading-color: #ffffff;
+  --docusaurus-highlighted-code-line-bg: rgba(255, 204, 51, 0.12);
 }
 
 html {
@@ -48,7 +53,7 @@ body {
 }
 
 .navbar {
-  border-bottom: 1px solid rgba(104, 110, 104, 0.24);
+  border-bottom: 1px solid rgba(36, 50, 61, 0.2);
   box-shadow: none;
   padding: 0 28px;
 }
@@ -58,9 +63,9 @@ body {
 }
 
 .navbar__logo {
-  height: 28px;
+  height: 30px;
   margin-right: 12px;
-  width: 28px;
+  width: auto;
 }
 
 .navbar__title,
@@ -74,25 +79,46 @@ body {
   font-weight: 500;
 }
 
+.navbar__link:hover {
+  color: #ed1c24;
+}
+
+[data-theme='dark'] .navbar {
+  border-bottom-color: rgba(255, 255, 255, 0.18);
+}
+
+[data-theme='dark'] .navbar__link:hover {
+  color: #ffcc33;
+}
+
 .navbar__start-link {
-  background: #151916;
-  color: #f2efe6;
+  background: #ed1c24;
+  color: #ffffff;
   padding: 10px 14px;
 }
 
-.navbar__start-link:hover,
+.navbar__start-link:hover {
+  background: #ffcc33;
+  color: #24323d;
+}
+
 [data-theme='dark'] .navbar__start-link {
-  background: #c4f451;
-  color: #151916;
+  background: #ffcc33;
+  color: #24323d;
+}
+
+[data-theme='dark'] .navbar__start-link:hover {
+  background: #ed1c24;
+  color: #ffffff;
 }
 
 .footer {
-  border-top: 1px solid #343934;
+  border-top: 1px solid #53606a;
   font-family: var(--font-mono);
 }
 
 .footer__title {
-  color: #c4f451;
+  color: #ffcc33;
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -101,6 +127,10 @@ body {
 .footer__item,
 .footer__copyright {
   font-size: 0.72rem;
+}
+
+.footer__link-item:hover {
+  color: #ffcc33;
 }
 
 .theme-doc-markdown h1,

@@ -76,7 +76,7 @@ function HomepageHeader(): ReactNode {
       <div className={styles.heroGrid}>
         <div className={styles.heroCopy}>
           <div className={styles.eyebrow}>
-            <span>TRADER OPENAPI</span>
+            <span>MF-TECHNOLOGIES</span>
             <span>V1.0</span>
           </div>
           <h1>
@@ -257,8 +257,8 @@ function ConceptLinks(): ReactNode {
 export default function Home(): ReactNode {
   return (
     <Layout
-      title="Trader OpenAPI"
-      description="Developer onboarding and API reference for the Trader OpenAPI platform.">
+      title="mf-Technologies Developer Platform"
+      description="Developer onboarding and API reference for the Trader OpenAPI platform by mf-Technologies.">
       <HomepageHeader />
       <main className={styles.main}>
         <Journey />

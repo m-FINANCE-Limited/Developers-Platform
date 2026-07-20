@@ -10,9 +10,9 @@ const siteUrl = new URL(
 const inferredBaseUrl = `${siteUrl.pathname.replace(/\/$/, '')}/`;
 
 const config: Config = {
-  title: 'Trader Developer Platform',
-  tagline: 'Build reliable trading experiences on Trader OpenAPI',
-  favicon: 'img/platform-mark.svg',
+  title: 'mf-Technologies Developer Platform',
+  tagline: 'Developer documentation for Trader OpenAPI',
+  favicon: 'img/mf-technologies-mark.svg',
 
   future: {
     v4: true,
@@ -20,7 +20,7 @@ const config: Config = {
 
   url: siteUrl.origin,
   baseUrl: process.env.BASE_URL ?? inferredBaseUrl,
-  organizationName: 'mF Technologies',
+  organizationName: 'mf-Technologies',
   projectName: 'developers-platform',
   onBrokenLinks: 'throw',
 
@@ -63,7 +63,7 @@ const config: Config = {
           },
         ],
         theme: {
-          primaryColor: '#087f5b',
+          primaryColor: '#ed1c24',
         },
       },
     ],
@@ -78,7 +78,7 @@ const config: Config = {
   themeConfig: {
     colorMode: {
       defaultMode: 'light',
-      respectPrefersColorScheme: true,
+      respectPrefersColorScheme: false,
     },
     metadata: [
       {
@@ -87,10 +87,11 @@ const config: Config = {
       },
     ],
     navbar: {
-      title: 'TRADER / DEVELOPERS',
+      title: 'DEVELOPER PLATFORM',
       logo: {
-        alt: 'Trader Developer Platform',
-        src: 'img/platform-mark.svg',
+        alt: 'mf-Technologies',
+        src: 'img/mf-technologies.svg',
+        srcDark: 'img/mf-technologies-dark.svg',
       },
       items: [
         {
@@ -151,7 +152,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} mF Technologies. Trader Developer Platform.`,
+      copyright: `Copyright © ${new Date().getFullYear()} mf-Technologies. Developer Platform.`,
     },
     docs: {
       sidebar: {
