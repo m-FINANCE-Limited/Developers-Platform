@@ -16,6 +16,7 @@ validate-site:
   stage: test
   script:
     - bun install --frozen-lockfile
+    - bun run lint:docs
     - bun run typecheck
     - bun run build
 

@@ -1,23 +1,21 @@
 ---
 sidebar_position: 1
 title: Make your first trade
-description: Authenticate, inspect the contract, and submit a market deal through Trader OpenAPI.
+description: Create an access token, retrieve contract settings, and submit a market deal.
 ---
 
-# Make your first trade
-
-This sequence uses WebProxy to establish access and FxServer to submit a market deal. Replace the sample hosts and values with those assigned to your environment.
+This guide creates a WebProxy session and access token, then submits a market deal to FxServer. Replace each placeholder with a value assigned to your environment.
 
 ## 1. Set your environment
 
 ```bash
 export WEB_PROXY_URL="https://your-webproxy-host"
-export TRADER_API_URL="https://your-fxserver-host"
+export FXSERVER_URL="https://your-fxserver-host"
 export TRADER_USER="your-user-id"
 export TRADER_PASSWORD="your-password"
 ```
 
-Keep credentials in a secret manager in production. The shell variables here are only for a local test session.
+Use these variables only in a secure local environment. In production, load credentials from a server-side secret manager and never expose them to client-side code.
 
 ## 2. Create a login session
 
@@ -32,7 +30,13 @@ curl --request POST "$WEB_PROXY_URL/api/session" \
   }"
 ```
 
-Store the `sessionToken` from the response. Accounts protected by OTP may require a follow-up `PATCH /api/session/{sessionId}` before a session token is issued.
+Store `sessionToken` from the response:
+
+```bash
+export SESSION_TOKEN="session-token-from-the-login-response"
+```
+
+If the response contains a `challenge`, complete the required OTP check with `PATCH /api/session/{sessionId}` before continuing. See the [WebProxy API](../web-proxy/openapi.mdx) for the request schema.
 
 ## 3. Create and exchange an API key
 
@@ -44,75 +48,83 @@ curl --request POST "$WEB_PROXY_URL/api/tokens/new" \
   --header 'Content-Type: application/json' \
   --data '{
     "name": "local-onboarding",
-    "permissions": ["READ", "TRADE"],
-    "expirationDate": "2030-12-31T00:00:00.000Z"
+    "permissions": ["read", "trade"],
+    "expirationDate": "2030-12-31"
   }'
 ```
 
-The response body is the API key as plain text. Exchange it for a short-lived access token:
+The response body contains the API key as plain text. Store it securely:
+
+```bash
+export API_KEY="api-key-from-the-create-token-response"
+```
+
+Exchange the API key for a short-lived access token:
 
 ```bash
 curl --request POST "$WEB_PROXY_URL/api/tokens/auth" \
   --header "Authorization: Bearer $API_KEY"
 ```
 
-Set the returned JWT for the remaining requests:
+Store `access_token` from the response for the remaining requests:
 
 ```bash
-export ACCESS_TOKEN="your-access-token"
+export ACCESS_TOKEN="access-token-from-the-token-exchange-response"
 ```
 
-The `expires_in` value is in minutes. Exchange the API key again when the access token expires.
+The `expires_in` value is measured in minutes. Exchange the existing API key again when the access token expires.
 
-## 4. Inspect the contract
+## 4. Retrieve the contract settings
 
-Read contract settings before you calculate an amount:
+This endpoint returns settings for all available contracts. Find the record whose `market` matches the contract you plan to trade:
 
 ```bash
 curl "$WEB_PROXY_URL/api/contractSetting" \
   --header "Authorization: Bearer $ACCESS_TOKEN"
 ```
 
-Amounts are contract units, not lots:
+Calculate `amount` in contract units:
 
 ```text
-amount = lots × contractSize
+amount = lotQuantity × contractSize
+minimumAmount = minTradeLot × contractSize
+incrementAmount = minLotIncrementUnit × contractSize
 ```
 
-For a `contractSize` of `100,000`, an order for `0.01` lot has an `amount` of `1,000`. The amount must also align with `contractSize × minLotIncrementUnit`.
+Send an amount that is at least `minimumAmount` and is a multiple of `incrementAmount`. For example, when `contractSize` is `100,000`, `0.01` lot is an `amount` of `1,000`.
 
 ## 5. Submit a market deal
 
-Market mode (`priceMode: 1`) uses FxServer's latest quote. Do not include `price` or `priceTag`.
+Market mode uses FxServer's latest quote. Set `priceMode` to `1`, and omit `price` and `priceTag`. Replace `123456` with an integer that is unique for this logical request.
 
 ```bash
-curl --request POST "$TRADER_API_URL/addDeal" \
+curl --request POST "$FXSERVER_URL/addDeal" \
   --header "Authorization: Bearer $ACCESS_TOKEN" \
   --header 'Content-Type: application/json' \
   --data '{
-    "clientOrderId": 10001,
+    "clientOrderId": 123456,
     "priceMode": 1,
     "contractCode": "EURUSD",
     "amount": 1000,
-    "buyOrSell": true,
-    "acceptPips": 0
+    "buyOrSell": true
   }'
 ```
 
-Use a new `clientOrderId` for each logical request. Retrying an accepted ID produces `409` rather than placing a duplicate trade.
+Use one `clientOrderId` per logical request. If the outcome is uncertain, retry with the same ID rather than generating a new one. A `409 Conflict` response means the server already accepted that ID for the account and trade date; reconcile the original request before taking further action.
 
 ## 6. Handle the outcome
 
-- `200` means the request completed successfully.
-- `202` with `HEDGE`, `DELAY`, or `MANUAL` means processing continues. Do not treat it as a completed deal.
-- `400` contains a business or validation error.
-- `401` usually means the JWT is missing or expired.
-- `429` means the account-scoped request limit was exceeded.
+- `200 OK` means the request completed successfully.
+- `202 Accepted` means the request is still being processed. Inspect `type`, such as `HEDGE`, `DELAY`, or `MANUAL`, and do not treat the response as a completed deal.
+- `400 Bad Request` means the request failed validation or a business rule. Inspect the response body.
+- `401 Unauthorized` means authentication is missing, invalid, or expired.
+- `409 Conflict` means the server already accepted the `clientOrderId` for the account and trade date.
+- `429 Too Many Requests` means the request was rate limited.
 
-Subscribe to `GET /updateEventStream` for position, order, execution, and cancellation events. Reconcile streamed updates with your own `clientOrderId` and server references.
+Connect to `GET /updateEventStream` for position, order, execution, and cancellation updates. Store references returned by successful trade requests and reconcile the stream with the resulting position and order state.
 
 ## Next steps
 
-- Read [REST API essentials](../fx-server/general-rest-api-information.md) before implementing retries or quoted pricing.
-- Explore every request and schema in the [FxServer Trader API](../fx-server/openapi-trader.mdx).
-- Use the [WebProxy API](../web-proxy/openapi.mdx) for account information, contract metadata, token lifecycle, and history.
+- See [REST API essentials](../fx-server/general-rest-api-information.md) for response handling, retries, and quoted pricing.
+- See the [FxServer Trader API](../fx-server/openapi-trader.mdx) for request and event schemas.
+- See the [WebProxy API](../web-proxy/openapi.mdx) for account data, contract settings, API keys, and token exchange.

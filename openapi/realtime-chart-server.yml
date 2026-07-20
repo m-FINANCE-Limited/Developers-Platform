@@ -1,0 +1,193 @@
+openapi: 3.1.0
+info:
+  description: |
+    This is chart server rest api documentations
+  version: 1.0.0
+  title: Chart Server
+paths:
+  /api/instrument/{instrument}/tick:
+    put:
+      summary: Modify tick
+      description: Modify tick
+      operationId: putInstrumentTick
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  description: format yyyy-MM-dd HH:mm
+                  examples:
+                    - 1990-01-01 01:01
+                open:
+                  type: number
+                high:
+                  type: number
+                low:
+                  type: number
+                close:
+                  type: number
+                scale:
+                  type: integer
+                  description: Scale. check scale mapping in document
+              required:
+                - date
+                - open
+                - high
+                - low
+                - close
+                - scale
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Instrument not found / scale not found
+        '400':
+          description: Invalid date format / Invalid input
+        '401':
+          description: Unauthorized. Token is invalid.
+      security:
+        - dealer: []
+        - ftsweb: []
+  /api/instrument/{instrument}/live-statistics:
+    get:
+      summary: Get instrument live statistics
+      description: Get instrument live statistics
+      operationId: getInstrumentLiveStatistics
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  5min:
+                    "$ref": "#/components/schemas/liveStatistics"
+                  60min:
+                    "$ref": "#/components/schemas/liveStatistics"
+                  1day:
+                    "$ref": "#/components/schemas/liveStatistics"
+                  52week:
+                    "$ref": "#/components/schemas/liveStatistics"
+        '400':
+          description: Invalid instrument name / Unsupported time series type
+  /api/instrumentnames:
+    get:
+      summary: Get Instrument Names
+      description: Get map of Platform contract id to chart instrument code mapping
+      operationId: getInstrumentNames
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+                  description: Chart instrument code
+  /api/instrument/{instrument}/open-price:
+    get:
+      summary: Get instrument open price
+      description: Get instrument open price
+      operationId: getInstrumentOpenPrice
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  open:
+                    type: number
+        '400':
+          description: Invalid instrument name
+        '404':
+          description: Instrument open price not found
+  /api/instrument/{instrument}/getChartBarsByEndTimeAndBarNumber/{periodType}/{barNumber}:
+    get:
+      summary: Get chart bars by end time and bar number
+      description: Get chart bars by end time and bar number
+      operationId: getChartBarsByEndTimeAndBarNumber
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/chartBarModel"
+        '400':
+          description: Invalid instrument name / Invalid period type
+  /api/instrument/{instrument}/getLastBar/{periodType}:
+    get:
+      summary: Get the last chart bar from cache
+      description: Get the last chart bar from cach
+      operationId: getLastBar
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  symbol:
+                    type: string
+                  time:
+                    type: integer
+                    format: int64
+                  open:
+                    type: number
+                  high:
+                    type: number
+                  low:
+                    type: number
+                  close:
+                    type: number
+        '400':
+          description: Invalid instrument name / Invalid period type
+
+
+components:
+  securitySchemes:
+    dealer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ftsweb:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    liveStatistics:
+      type: object
+      properties:
+        open:
+          type: number
+        high:
+          type: number
+        low:
+          type: number
+    chartBarModel:
+      type: object
+      properties:
+        symbol:
+          type: string
+        time:
+          type: integer
+          format: int64
+        open:
+          type: number
+        high:
+          type: number
+        low:
+          type: number
+        close:
+          type: number

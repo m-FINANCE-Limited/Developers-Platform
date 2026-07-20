@@ -6,7 +6,7 @@ Developer onboarding and interactive OpenAPI reference for the Trader platform. 
 
 - Bun 1.3 or newer
 - Node.js 20 or newer for Docusaurus
-- A sibling `../platform-next/document` checkout when refreshing source content
+- Sibling `../platform-next/document` and `../realtimechartserver/document` checkouts when refreshing source content
 
 ## Local development
 
@@ -20,14 +20,13 @@ The development server is available at `http://localhost:3000` by default.
 
 ## Content sources
 
-`bun run sync:content` refreshes these files from `../platform-next/document`:
+`bun run sync:content` refreshes OpenAPI specifications from the sibling service repositories:
 
 - `openapi/fxserver-trader.yaml`
 - `openapi/webproxy.yml`
-- General REST API information
-- Contract, currency, price, and price-streaming concepts
+- `openapi/realtime-chart-server.yml`
 
-Set `PLATFORM_NEXT_DOCUMENT_DIR` to use a different source checkout. The synced files are committed so GitLab CI does not need access to the sibling repository.
+The guides in `docs/` are curated for this developer platform and are not overwritten by content sync. Set `PLATFORM_NEXT_DOCUMENT_DIR` or `REALTIME_CHART_SERVER_DOCUMENT_DIR` to use different source checkouts. The synced files are committed so GitLab CI does not need access to the sibling repositories.
 
 ## Validation
 

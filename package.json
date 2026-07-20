@@ -7,6 +7,7 @@
     "build": "docusaurus build",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
+    "lint:docs": "markdownlint-cli2 \"docs/**/*.{md,mdx}\" \"README.md\"",
     "typecheck": "tsc",
     "sync:content": "bun scripts/sync-content.ts"
   },
@@ -28,6 +29,7 @@
     "@docusaurus/types": "3.10.2",
     "@types/bun": "^1.2.22",
     "@types/react": "^19.1.13",
+    "markdownlint-cli2": "^0.23.1",
     "typescript": "~6.0.2"
   },
   "browserslist": {

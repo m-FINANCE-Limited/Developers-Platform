@@ -86,7 +86,8 @@ function HomepageHeader(): ReactNode {
           </h1>
           <p>
             The complete onboarding path for developers building secure,
-            observable trading experiences on FxServer and WebProxy.
+            observable trading experiences on FxServer, WebProxy, and Realtime
+            Chart Server.
           </p>
           <div className={styles.heroActions}>
             <Link
@@ -157,9 +158,9 @@ function ApiSurfaces(): ReactNode {
       <div className={styles.surfaceIntro}>
         <p>THE API SURFACE</p>
         <h2>
-          Two services.
+          Three services.
           <br />
-          One trading workflow.
+          One connected platform.
         </h2>
       </div>
       <Link className={styles.surfaceCard} to="/docs/web-proxy/openapi">
@@ -191,6 +192,23 @@ function ApiSurfaces(): ReactNode {
         </div>
         <div className={styles.surfaceFooter}>
           <span>Open reference</span>
+          <Arrow />
+        </div>
+      </Link>
+      <Link
+        className={`${styles.surfaceCard} ${styles.surfaceCardChart}`}
+        to="/docs/realtime-chart-server/overview">
+        <div className={styles.surfaceNumber}>A / 03</div>
+        <div>
+          <span className={styles.surfaceTag}>MARKET DATA + BARS</span>
+          <h3>Realtime Chart Server</h3>
+          <p>
+            Instrument mapping, OHLC history, latest bars, open prices, and
+            live market statistics.
+          </p>
+        </div>
+        <div className={styles.surfaceFooter}>
+          <span>Read the guide</span>
           <Arrow />
         </div>
       </Link>

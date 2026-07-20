@@ -16,7 +16,11 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'API reference',
       collapsed: false,
-      items: ['fx-server/openapi-trader', 'web-proxy/openapi'],
+      items: [
+        'fx-server/openapi-trader',
+        'web-proxy/openapi',
+        'realtime-chart-server/openapi',
+      ],
     },
     {
       type: 'category',
@@ -26,6 +30,7 @@ const sidebars: SidebarsConfig = {
         'business-logic/currency-overview',
         'business-logic/price-concept',
         'fx-server/price-steaming',
+        'realtime-chart-server/overview',
       ],
     },
   ],

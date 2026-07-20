@@ -56,6 +56,11 @@ const config: Config = {
             spec: 'openapi/webproxy.yml',
             route: '/reference/webproxy',
           },
+          {
+            id: 'realtime-chart-server-openapi',
+            spec: 'openapi/realtime-chart-server.yml',
+            route: '/reference/realtime-chart-server',
+          },
         ],
         theme: {
           primaryColor: '#087f5b',
@@ -78,7 +83,7 @@ const config: Config = {
     metadata: [
       {
         name: 'keywords',
-        content: 'Trader OpenAPI, FxServer, WebProxy, trading API, developer platform',
+        content: 'Trader OpenAPI, FxServer, WebProxy, Realtime Chart Server, trading API, chart API, developer platform',
       },
     ],
     navbar: {
@@ -105,6 +110,11 @@ const config: Config = {
           position: 'left',
         },
         {
+          to: '/docs/realtime-chart-server/openapi',
+          label: 'Chart API',
+          position: 'left',
+        },
+        {
           to: '/docs/getting-started/first-trade',
           label: 'Start building',
           position: 'right',
@@ -128,6 +138,7 @@ const config: Config = {
           items: [
             {label: 'FxServer Trader', to: '/docs/fx-server/openapi-trader'},
             {label: 'WebProxy', to: '/docs/web-proxy/openapi'},
+            {label: 'Realtime Chart Server', to: '/docs/realtime-chart-server/openapi'},
           ],
         },
         {
@@ -136,6 +147,7 @@ const config: Config = {
             {label: 'Contracts', to: '/docs/business-logic/contract-overview'},
             {label: 'Currencies', to: '/docs/business-logic/currency-overview'},
             {label: 'Price concepts', to: '/docs/business-logic/price-concept'},
+            {label: 'Chart data and periods', to: '/docs/realtime-chart-server/overview'},
           ],
         },
       ],

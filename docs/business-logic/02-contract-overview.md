@@ -1,125 +1,54 @@
-# Contract Overview
+---
+title: Contract concepts
+description: Read contract settings and calculate valid trade amounts.
+---
 
-- Contract contains two currency pairs
-- E.g.
-    - Contract: EURAUD
-    - CurrencyPair1: EURAUD
-    - CurrencyPair2: AUDUSD
+A contract is a tradable instrument identified by its contract code. WebProxy returns the contract code in the `market` field of `GET /api/contractSetting`. FxServer uses the same value in fields such as `contractCode`.
 
-# Steps to define a Contract
+Examples include `EURUSD` for an FX contract and `XAUUSD` for a bullion contract. Do not assume that every contract is an FX currency pair; use the `category` and currency fields returned by WebProxy.
 
-## 1. Decide System Currency
+## Read contract settings
 
-- Mostly USD
+Retrieve contract settings before constructing a trade request. Select the record whose `market` matches the contract you plan to trade.
 
-## 2. Decide the Currency Paris to be Contract
+| Field | Purpose |
+| --- | --- |
+| `market` | Contract code sent to FxServer. |
+| `enabled` | Whether the contract is enabled in the current environment. |
+| `category` | Product category, such as forex, bullion, commodity, CFD, or crypto. |
+| `baseCurr` | Base currency associated with the contract. |
+| `counterCurr` | Quote or counter currency associated with the contract. |
+| `contractSize` | Number of contract units in one lot. |
+| `minTradeLot` | Minimum supported lot quantity. |
+| `minLotIncrementUnit` | Supported increment between lot quantities. |
+| `decimalPlace` | Display precision for contract prices. |
 
-- EURAUD
-- Base Currency: EUR
-- Counter Currency: AUD
+Treat these settings as environment-specific. Do not hard-code values from another account, product, or deployment.
 
-### Notes:
+## Calculate amount
 
-- Currency Pairs should contains two currency, but sometimes you may only see USD, HKD, RMB.
-- Those currency pairs just hide the counter currency, their full name should be USDUSD, HKDUSD and RMBUSD
+FxServer accepts `amount` in contract units, not lots:
 
-## 3. Define all related currency pairs first
-
-### Currency Pair 1: EURAUD
-
-- The core currency of this contract
-- EquivCurrPair of Currency Pair 1: EURUSD
-
-### Currency Pair 2: AUDUSD
-
-- *Currency Pair 2 should link the counter currency to system currency*
-- EquivCurrPair of CurrPair2: AUDUSD
-
-#### How about Major currency or Exotic currency?
-- If your base currency or counter currency is already the system currency, just use system currency
-    - USDJPY → CurrPair2 = USD
-    - EURUSD → CurrPair2 = USD
-
-
-## 4. Whether this contract’s base currency is system currency?
-
-- EUR is not USD, so BaseCurr = 0
-- If contract is USDJPY, then BaseCurr = 1
-
-## Result
-
-| No. | Contract | Currency1 | Currency2 | Contract Size | BaseCurr |
-| --- | --- | --- | --- | --- | --- |
-| 1 | EURAUD | EURAUD | AUDUSD | 100000 | 0 |
-
-| No. | Currency | EquivCurr | Bid | Ask | DirectQuote |
-| --- | --- | --- | --- | --- | --- |
-| 1 | EURAUD | EURUSD | 1.62 | 1.63 | 0 |
-| 2 | AUDUSD | AUDUSD | 0.66 | 0.67 | 0 |
-| 3 | EURUSD | EURUSD | 1.08 | 1.09 | 0 |
-| 4 | USD | USD | 1 | 1 | 1 |
-
-## Combine Contract and Currency
-
-### 1. Bid, Ask of Contract
-
-- Just use the bid ask from the currency pair 1
-- Need to be aware of the direction:
-
-```
-if Contract.BaseCurr == CurrencyPair1.DirectQuote
-  // Case 1
-	Contract.Bid = Currency1.Bid
-	Contract.Ask = Currency1.Ask
-else:
-  // Case 2
-	Contract.Bid = 1 / Currency1.Ask
-	Contract.Ask = 1 / Currency1.Bid
+```text
+amount = lotQuantity × contractSize
+minimumAmount = minTradeLot × contractSize
+incrementAmount = minLotIncrementUnit × contractSize
 ```
 
-- When you have a contract like USDJPY, but your currency definition is JPYUSD, you need to use the Case 2 formula
-- You need to know:
-    - Contract.BaseCurr == Currency1.DirectQuote is equivalent to
-    - Contract.BaseCurr xor Currency1.DirectQuote == 0
+Send an amount that is at least `minimumAmount` and is a multiple of `incrementAmount`.
 
-### 2. Make Sure you can convert any currency to System Currency
+For example, if `contractSize` is `100,000` and the requested quantity is `0.01` lot:
 
-- Contract: EURAUD
-- BaseCurrency: EUR
-- CounterCurrency: AUD
-- Base Currency to System Currency:
-    - CurrencyPair1.EquivCurrPair: EURUSD
-    - Find the EURUSD from currency table and get the bid ask
-- Counter Currency to System Currency
-    - Remember, Currency Pair 2 must link to System Currency
-    - CurrencyPair2: AUDUSD
-    - Find the AUDUSD from currency table and get the bid ask
-- Finally, convert system currency to your desired currency
+```text
+amount = 0.01 × 100,000 = 1,000
+```
 
+## Distinguish contract and chart codes
 
+Trading endpoints use the contract code. Realtime Chart Server endpoints use a chart code, which can be different.
 
-# Posibility
-- O means is the system currency
-- X means not the system currency
-- '-' means don't care
+Call FxServer `GET /chartCode` to map a contract code to its chart code before requesting chart data. See [Realtime Chart Server](../realtime-chart-server/overview.md) for the complete workflow.
 
-|Case| CurrencyPair1 |  | CurrencyPair2 | |
-| --- | --- | --- | --- | --- |
-|| BaseCurr | QuoteCurr | BaseCurr | QuoteCurr |
-| 1 | O | X | - | - |
-| 2 | X | O | - | - |
-| 3 | X | X | O | X |
-| 4 | X | X | X | O |
+## Server authority
 
-
-## Example
-- **USD is the system currency**
-
-|Contract| CurrencyPair1 |  | CurrencyPair2 | | Case |
-| --- | --- | --- | --- | --- | --- |
-|| BaseCurr | QuoteCurr | BaseCurr | QuoteCurr | |
-| XAUUSD | XAU | USD | USD | - | 2 |
-| EURUSD | EUR | USD | USD | - | 2 |
-| USDJPY | USD | JPY | USD | - | 1 |
-| AUDCAD | AUD | CAD | USD | CAD | 3 |
-| GBPNZD | GBP | NZD | NZD | USD | 4 |
+Contract settings describe request constraints, but FxServer remains authoritative for validation, pricing, margin, and execution. Re-read settings when your environment indicates that configuration changed, and handle validation errors rather than relying only on client-side checks.

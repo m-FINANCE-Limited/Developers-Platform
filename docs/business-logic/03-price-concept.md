@@ -1,108 +1,59 @@
-# Price Concepts
+---
+title: Price concepts
+description: Choose market or quoted pricing and handle price tags correctly.
+---
 
-# Platform Price Stream
+FxServer supports market and quoted pricing for deal and liquidation requests. The selected `priceMode` determines which price fields the request must include.
 
-- We have a price stream from “Price Server”
-- let us called them “Original Price Stream”
+## Bid and ask
 
-### Format
+A quote contains two sides:
 
-| Currency | Bid | Ask | PriceTag |
-| --- | --- | --- | --- |
-| EURUSD | 1.082 | 1.083 | EURUSD1730017407123 |
-- Please be aware that this price stream is currency level, not contract level
-- PriceTag is Currency Name + timestamp in millisecond
+- **Bid** is the price at which the trader can sell.
+- **Ask** is the price at which the trader can buy.
 
-# Customer’s Price Stream
+Use the side that matches the requested direction. Do not calculate an execution price by averaging bid and ask.
 
-## Bid Ask Spread
+Quotes can include account-specific pricing adjustments. Use the values delivered to the authenticated trader rather than values observed from another account or environment.
 
-- For a trader, he will not directly see the original price stream
-- They adjusted price spread base on their assigned bid spread and ask spread
-- Each customer will have his own customised bid spread and ask spread
-- So Customer’s Price Stream should look like this:
+## Market mode
 
-```
-Customer Bid = Original Bid + Bid Spread
-Customer Ask = Original Ask + Ask Spread
-Customer High Bid = Original High Bid + Bid Spread
-Customer Low Bid = Original Low Bid + Bid Spread
-Customer High Ask = Original High Ask + Ask Spread
-Customer Low Ask = Original Low Ask + Ask Spread
-```
+Set `priceMode` to `1` when FxServer should use its latest eligible quote. Omit `price` and `priceTag`.
 
-- Bid Spread is negative
-- Apply a large spread value to customers who always make money
+Market mode does not guarantee a specific execution price. The final deal, position, order, and event data returned by the server are authoritative.
 
-# Valid Price Stream
+## Quoted mode
 
-- Only prices sent out from our platform will be treat as “Valid”
-- Customer cannot use a random price as the market order’s request price
-- Customer have to use the price received from platform as the market order request price
-- Each price sent out from our platform has a Price Tag
+Set `priceMode` to `2` when submitting a quote obtained from the price feed configured for your environment.
 
-## Validation 1: Price Tag
+- Send `price` with the quoted bid or ask selected for the request direction.
+- Send `priceTag` when server-side price checking is enabled.
+- Format `priceTag` as `${tag};${price}`.
+- Do not modify or synthesize the tag.
 
-- Platform will remember the latest N prices that send out to traders
-- If trade send a market order request, it should contains a request price and the corresponding price tag
-- If platform cannot recognise the price tag from you market order, it will reject your order
-- If the price tag is too old, it will also reject your order
-- TODO: more details about the price tag validation
+Example:
 
-## Validation 2: Request Price
-
-- Given a price tag, platform can retrieve the Original Bid and Ask price
-    - EURUSD1730017407123 → 1.082/1.083
-- Make sure satisfy below formula
-
-```
-Customer Request Bid/Ask Price = Original Bid/Ask Price + Customer Spread
+```json
+{
+  "priceMode": 2,
+  "contractCode": "XAUUSD",
+  "amount": 100,
+  "buyOrSell": true,
+  "price": 4762.9,
+  "priceTag": "LLG1775716357987;4762.9"
+}
 ```
 
-# Request Price
+FxServer can reject a stale or invalid price tag with `msg: "710"`. When price checking is enabled, a missing price tag can return `msg: "2001"`.
 
-- The price that request by customer for making order
-- It should be a member of customer price stream
+## Request and execution prices
 
-```
-Request Bid = Customer Bid
-Request Ask = Customer Ask
-```
+The request price expresses the quote selected by the client in quoted mode. It is not proof of execution.
 
-# Market Price
+Processing can complete immediately or continue asynchronously through hedge, delay, or manual handling. Use the completed server response and subsequent account, position, order, and event state to determine the execution outcome and price.
 
-- Basically the latest Customer Bid Ask
-- Each Customer will have his own Market Price
+## Related guidance
 
-```
-Market Bid (Customer) = Latest Original Bid + Customer Bid Spread
-Market Ask (Customer) = Latest Original Ask + Customer Ask Spread 
-```
-
-# Rebate Price
-
-- *This is the actual price used for execute a deal, not the request price or market price !!!*
-- add new rebate spread
-- Take more advantage from the customer, so company have more money to share with the upline
-
-```
-Rebate Bid = Request Bid + Rebate Bid Spread
-Rebate Ask = Request Ask + Rebate Ask Spread
-```
-
-# Hedge Price
-
-- TODO
-
-# SettleRate
-
-- The conversion rate between System Currency and Settlement Currency
-- Use Mid Price
-
-```
-SettleRate = (SystemToSettleRateBid + SystemToSettleRateAsk) / 2
-```
-
-# Execution Price
-
-- The Rebate Price
+- See [Price streaming](../fx-server/price-steaming.md) for the fields used by quoted mode.
+- See [REST API essentials](../fx-server/general-rest-api-information.md) for response handling and duplicate-request protection.
+- See the [FxServer Trader API](../fx-server/openapi-trader.mdx) for complete request schemas.
