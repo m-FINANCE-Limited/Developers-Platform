@@ -10,9 +10,9 @@ const siteUrl = new URL(
 const inferredBaseUrl = `${siteUrl.pathname.replace(/\/$/, '')}/`;
 
 const config: Config = {
-  title: 'mf-Technologies Developer Platform',
+  title: 'mF Technologies Developer Platform',
   tagline: 'Developer documentation for Trader OpenAPI',
-  favicon: 'img/mf-technologies-mark.svg',
+  favicon: 'img/mF technologies-mark.svg',
 
   future: {
     v4: true,
@@ -20,7 +20,7 @@ const config: Config = {
 
   url: siteUrl.origin,
   baseUrl: process.env.BASE_URL ?? inferredBaseUrl,
-  organizationName: 'mf-Technologies',
+  organizationName: 'mF Technologies',
   projectName: 'developers-platform',
   onBrokenLinks: 'throw',
 
@@ -89,9 +89,9 @@ const config: Config = {
     navbar: {
       title: 'DEVELOPER PLATFORM',
       logo: {
-        alt: 'mf-Technologies',
-        src: 'img/mf-technologies.svg',
-        srcDark: 'img/mf-technologies-dark.svg',
+        alt: 'mF Technologies',
+        src: 'img/mF technologies.svg',
+        srcDark: 'img/mF technologies-dark.svg',
       },
       items: [
         {
@@ -152,7 +152,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} mf-Technologies. Developer Platform.`,
+      copyright: `Copyright © ${new Date().getFullYear()} mF Technologies. Developer Platform.`,
     },
     docs: {
       sidebar: {

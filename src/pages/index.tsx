@@ -257,8 +257,8 @@ function ConceptLinks(): ReactNode {
 export default function Home(): ReactNode {
   return (
     <Layout
-      title="mf-Technologies Developer Platform"
-      description="Developer onboarding and API reference for the Trader OpenAPI platform by mf-Technologies.">
+      title="mF Technologies Developer Platform"
+      description="Developer onboarding and API reference for the Trader OpenAPI platform by mF Technologies.">
       <HomepageHeader />
       <main className={styles.main}>
         <Journey />
