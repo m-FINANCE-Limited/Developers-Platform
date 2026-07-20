@@ -38,3 +38,9 @@ bun run build
 ## GitLab Pages
 
 The pipeline in `.gitlab-ci.yml` publishes `build/` when a commit reaches the default branch. Docusaurus receives `CI_PAGES_URL`, so both custom-domain and project-path Pages deployments use the correct base URL.
+
+## GitHub Pages
+
+The workflow in `.github/workflows/github-pages.yml` validates pull requests and publishes `build/` after changes reach `main`. It uses the URL reported by GitHub Pages so Docusaurus generates correct links for both custom-domain and project-path deployments.
+
+Before the first deployment, set **Settings > Pages > Build and deployment > Source** to **GitHub Actions** in the GitHub repository.
