@@ -12,7 +12,7 @@ const inferredBaseUrl = `${siteUrl.pathname.replace(/\/$/, '')}/`;
 const config: Config = {
   title: 'mF Technologies Developer Platform',
   tagline: 'Developer documentation for Trader OpenAPI',
-  favicon: 'img/mF technologies-mark.svg',
+  favicon: 'img/mf-technologies-mark.svg',
 
   future: {
     v4: true,
@@ -90,8 +90,8 @@ const config: Config = {
       title: 'DEVELOPER PLATFORM',
       logo: {
         alt: 'mF Technologies',
-        src: 'img/mF technologies.svg',
-        srcDark: 'img/mF technologies-dark.svg',
+        src: 'img/mf-technologies.svg',
+        srcDark: 'img/mf-technologies-dark.svg',
       },
       items: [
         {
